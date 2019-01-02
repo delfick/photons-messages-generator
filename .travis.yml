@@ -1,0 +1,19 @@
+language: python
+
+dist: xenial
+
+python:
+  - "3.6"
+  - "3.7"
+
+env:
+  global:
+    - CI_SERVER=true
+
+install:
+  - pip install pip --upgrade
+  - pip install -e .
+  - pip install -e '.[tests]'
+
+script:
+  - ./test.sh
