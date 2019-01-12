@@ -162,9 +162,8 @@ class Resolver:
                   parent_full_name, field.full_name
                 ) or field.type
 
-            field.type = self.resolve_type(field_type
-                , full_name = parent_full_name
-                , original = self.resolve_type(field.type, full_name=parent_full_name, original=None)
+            field.type = self.resolve_type(field.full_name, parent_full_name, field_type
+                , original = self.resolve_type(field.full_name, parent_full_name, field.type, original=None)
                 )
 
     def resolve_packet_fields(self):
@@ -327,7 +326,7 @@ class Resolver:
                 , name = full_name
                 )
 
-    def resolve_type(self, typ, original, full_name):
+    def resolve_type(self, field, parent, typ, original):
         if isinstance(typ, ft.OverrideType):
             return typ
 
@@ -336,19 +335,19 @@ class Resolver:
                 raise errors.NotAClone("Can only override structs with clones of them"
                     , wanted=typ
                     , need_clone_of=original
-                    , name=full_name
+                    , name=parent
                     )
             return ft.StructType(self.get_struct(typ.struct), original.multiples)
 
         elif isinstance(typ, ft.StringType):
             if not isinstance(original, ft.SimpleType) or original.val != "byte":
                 raise errors.CantBeString("Only bytes can be turned into string"
-                    , name=full_name
+                    , name=parent
                     )
             return typ
 
         elif isinstance(typ, ft.SpecialType):
-            self.ensure_is_same_type(typ, original, full_name)
+            self.ensure_is_same_type(typ, original, parent)
             return typ
 
         elif not isinstance(typ, str):
@@ -360,18 +359,19 @@ class Resolver:
             typ = typ[typ.find("]") + 1:]
 
         if typ.startswith("<") and typ.endswith(">"):
-            return self.find_type(typ[1:-1], multiples)
+            return self.find_type(field, parent, typ[1:-1], multiples)
         else:
             return ft.SimpleType(typ, multiples)
 
-    def find_type(self, typ, multiples):
+    def find_type(self, field, parent, typ, multiples):
         ignored = self.adjustments.ignore.get(typ)
         if ignored and not ignored.expanded:
             return ft.SimpleType("byte", 1)
 
         for enum in self.src.enums:
             if enum.full_name == typ:
-                return ft.EnumType(enum, multiples)
+                allow_unknown_enums = self.adjustments.field_attr(parent, field, "allow_unknown_enums", False)
+                return ft.EnumType(enum, multiples, allow_unknown=allow_unknown_enums)
 
         for struct in self.src.groups:
             if struct.full_name == typ:

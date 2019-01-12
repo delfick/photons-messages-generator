@@ -20,8 +20,9 @@ class StringType:
         return f"{convert_type('string', size_bytes)}"
 
 class EnumType:
-    def __init__(self, enum, multiples):
+    def __init__(self, enum, multiples, allow_unknown=False):
         self.enum = enum
+        self.allow_unknown = allow_unknown
         if multiples != 1:
             raise errors.NonsensicalMultiplier("Enums cannot be multiple"
                 , wanted=multiples
@@ -37,7 +38,10 @@ class EnumType:
         return f"<Enum: {self.enum.type}: {self.enum.name}>"
 
     def format(self, size_bytes, **kwargs):
-        return f"{convert_type(self.enum.type, size_bytes)}.enum(enums.{self.enum.name})"
+        options = ""
+        if self.allow_unknown:
+            options = ", allow_unknown=True"
+        return f"{convert_type(self.enum.type, size_bytes)}.enum(enums.{self.enum.name}{options})"
 
 class StructOverrideType:
     def __init__(self, struct):

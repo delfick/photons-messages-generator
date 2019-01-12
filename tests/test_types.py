@@ -710,3 +710,136 @@ describe TestCase, "Types":
         with self.fuzzyAssertRaisesError(errors.NoSuchEnumValue, **kwargs):
             with self.generate(src, adjustments) as output:
                 pass
+
+    it "can understand unknown values for enums":
+        src ="""
+            enums:
+              SomeEnum:
+                type: uint8
+                values:
+                  - name: "SOME_ENUM_ONE"
+                    value: 1
+                  - name: "SOME_ENUM_TWO"
+                    value: 2
+
+              SomeOtherEnum:
+                type: uint8
+                values:
+                  - name: "SOME_OTHER_ENUM_THREE"
+                    value: 3
+                  - name: "SOME_OTHER_ENUM_FOUR"
+                    value: 4
+
+              AnotherEnum:
+                type: uint8
+                values:
+                  - name: "ANOTHER_ENUM_FIVE"
+                    value: 5
+                  - name: "ANOTHER_ENUM_SIX"
+                    value: 6
+
+              BestEnum:
+                type: uint8
+                values:
+                  - name: "BEST_ENUM_SEVEN"
+                    value: 7
+                  - name: "BEST_ENUM_EIGHT"
+                    value: 8
+
+            fields:
+              SomeParams:
+                size_bytes: 1
+                fields:
+                  - name: "One"
+                    type: "<SomeEnum>"
+                    size_bytes: 1
+                  - name: "Two"
+                    type: "<SomeOtherEnum>"
+                    size_bytes: 1
+                  - name: "Three"
+                    type: "<SomeEnum>"
+                    size_bytes: 1
+
+            packets:
+              one:
+                OnePacketExample:
+                  pkt_type: 1
+                  size_bytes: 1
+                  fields:
+                    - name: "Four"
+                      type: "<AnotherEnum>"
+                      size_bytes: 1
+                    - name: "Five"
+                      type: "<BestEnum>"
+                      size_bytes: 1
+                    - name: "Six"
+                      type: "<BestEnum>"
+                      size_bytes: 1
+        """
+
+        adjustments = """
+        num_reserved_fields_in_frame: 3
+
+        changes:
+          SomeParams:
+            fields:
+              One:
+                allow_unknown_enums: true
+              Three:
+                default: ONE
+                allow_unknown_enums: true
+
+          OnePacketExample:
+            fields:
+              Five:
+                allow_unknown_enums: true
+              Six:
+                default: EIGHT
+                allow_unknown_enums: true
+        """
+
+        with self.generate(src, adjustments) as output:
+            expected_enums = """
+            class SomeEnum(Enum):
+                ONE = 1
+                TWO = 2
+
+            class SomeOtherEnum(Enum):
+                THREE = 3
+                FOUR = 4
+
+            class AnotherEnum(Enum):
+                FIVE = 5
+                SIX = 6
+
+            class BestEnum(Enum):
+                SEVEN = 7
+                EIGHT = 8
+            """
+
+            expected_fields = """
+            some_params = (
+                  ("one", T.Uint8.enum(enums.SomeEnum, allow_unknown=True))
+                , ("two", T.Uint8.enum(enums.SomeOtherEnum))
+                , ("three", T.Uint8.enum(enums.SomeEnum, allow_unknown=True).default(enums.SomeEnum.ONE))
+                )
+            """
+
+            expected_messages = """
+            ########################
+            ###   ONE
+            ########################
+            
+            class OneMessages(Messages):
+                PacketExample = msg(1
+                    , ("four", T.Uint8.enum(enums.AnotherEnum))
+                    , ("five", T.Uint8.enum(enums.BestEnum, allow_unknown=True))
+                    , ("six", T.Uint8.enum(enums.BestEnum, allow_unknown=True).default(enums.BestEnum.EIGHT))
+                    )
+            
+            __all__ = ["OneMessages"]
+            """
+
+            output.assertFileContents("enums.py", expected_enums)
+            output.assertFileContents("fields.py", expected_fields)
+            output.assertFileContents("messages.py", expected_messages)

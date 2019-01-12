@@ -85,6 +85,7 @@ class AdjustField(dictobj.Spec):
     rename = dictobj.NullableField(sb.string_spec)
     default = dictobj.NullableField(sb.string_spec)
     extras = dictobj.Field(sb.listof(sb.string_spec()))
+    allow_unknown_enums = dictobj.Field(sb.boolean, default=False)
 
     bits = dictobj.NullableField(sb.listof(sb.string_spec()))
     string_type = dictobj.NullableField(must_be_true_spec("string_type"))
