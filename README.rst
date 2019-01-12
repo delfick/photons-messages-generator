@@ -10,7 +10,7 @@ https://github.com/delfick/photons-core
 Changelog
 ---------
 
-0.5.1 - TBD
+0.5.1 - 12 Jan 2019
     * Make it possible to say an enum value allows unknown values
 
 0.5 - 3 Jan 2019
