@@ -12,7 +12,7 @@ setup(
       [ "delfick_error==1.7.8"
       , "input_algorithms==0.6.0"
       , "option_merge==1.6"
-      , "pyYaml==3.13"
+      , "ruamel.yaml==0.15.87"
       , "delfick_logging==0.3.2"
       ]
 

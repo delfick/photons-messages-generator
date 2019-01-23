@@ -3,11 +3,11 @@ from photons_messages_generator.generate import generate
 from delfick_error import DelfickErrorTestMixin
 from contextlib import contextmanager
 from unittest import TestCase
+from ruamel.yaml import YAML
 from textwrap import dedent
 import tempfile
 import difflib
 import shutil
-import yaml
 import os
 
 @contextmanager
@@ -63,8 +63,8 @@ class TestCase(TestCase, DelfickErrorTestMixin):
     @contextmanager
     def generate(self, src, adjustments):
         with a_temp_dir() as directory:
-            src = yaml.load(src)
-            adjustments = yaml.load(adjustments) or {}
+            src = YAML(typ='safe').load(src)
+            adjustments = YAML(typ='safe').load(adjustments) or {}
 
             if "output" not in adjustments:
                 adjustments["output"] = [

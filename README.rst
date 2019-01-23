@@ -10,6 +10,9 @@ https://github.com/delfick/photons-core
 Changelog
 ---------
 
+0.5.2 - 23 Jan 2019
+    * Started using ruamel.yaml instead of PyYaml to load configuration
+
 0.5.1 - 12 Jan 2019
     * Make it possible to say an enum value allows unknown values
 

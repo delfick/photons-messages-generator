@@ -2,8 +2,8 @@ from photons_messages_generator.generate import generate
 
 from delfick_logging import setup_logging
 from delfick_error import DelfickError
+from ruamel.yaml import YAML
 import argparse
-import yaml
 import sys
 import os
 
@@ -38,8 +38,8 @@ def main(argv=None):
         raise Exception("Couldn't find the source yaml file, did you `git submodule update --init` ?")
 
     with open(args.src) as fle:
-        src = yaml.load(fle)
-    adjustments = yaml.load(args.adjustments)
+        src = YAML(typ='safe').load(fle)
+    adjustments = YAML(typ='safe').load(args.adjustments)
 
     if not os.path.exists(args.output_folder):
         os.makedirs(args.output_folder)
