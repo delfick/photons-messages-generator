@@ -10,6 +10,10 @@ https://github.com/delfick/photons-core
 Changelog
 ---------
 
+0.5.3 - 28 June 2019
+    * Emit fields as lists instead of tuples to ensure it's a list when there's
+      only one item in it.
+
 0.5.2 - 23 Jan 2019
     * Started using ruamel.yaml instead of PyYaml to load configuration
 
