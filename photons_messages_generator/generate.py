@@ -43,13 +43,13 @@ def write_fields(options, src, adjustments, output_folder):
                 want.append(struct)
 
         for num, struct in enumerate(want):
-            write_line(f"{struct.name} = (")
+            write_line(f"{struct.name} = [")
             for i, field in enumerate(struct.item_fields):
                 indent = "    , "
                 if i == 0:
                     indent = indent.replace(",", " ")
                 write_line(f"{indent}{field.format(in_fields=True)}")
-            write_line("    )")
+            write_line("    ]")
 
             if num != len(want) - 1:
                 write_line("")

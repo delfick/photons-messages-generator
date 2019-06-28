@@ -64,9 +64,9 @@ describe TestCase, "renames":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
-            some_params = (
+            some_params = [
                   ("one_thing", T.Uint8)
-                )
+                ]
             """
 
             expected_messages = """
@@ -145,9 +145,9 @@ describe TestCase, "renames":
             """
 
             expected_fields = """
-            some_params = (
+            some_params = [
                   ("one", T.Uint8.enum(enums.RenamedEnum))
-                )
+                ]
             """
 
             expected_messages = """
@@ -220,21 +220,21 @@ describe TestCase, "renames":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
-            renamed_params = (
+            renamed_params = [
                   ("one", T.Uint8)
-                )
+                ]
 
             class RenamedParamsKls(dictobj.PacketSpec):
                 fields = renamed_params
 
-            other_params = (
+            other_params = [
                   ("blah", T.Uint32)
                 , *renamed_params
-                )
+                ]
 
-            more_params = (
+            more_params = [
                   ("params", T.Bytes(8 * 3).many(lambda pkt: RenamedParamsKls))
-                )
+                ]
             """
 
             expected_messages = """
@@ -277,9 +277,9 @@ describe TestCase, "renames":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
-            some_params = (
+            some_params = [
                   ("hello", T.Uint8)
-                )
+                ]
             """
 
             output.assertFileContents("fields.py", expected_fields)
@@ -309,9 +309,9 @@ describe TestCase, "renames":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
-            example_params = (
+            example_params = [
                   ("hello", T.Uint8)
-                )
+                ]
             """
 
             output.assertFileContents("fields.py", expected_fields)
@@ -417,11 +417,11 @@ describe TestCase, "renames":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
-            some_params = (
+            some_params = [
                   ("one_one", T.Uint8)
                 , ("one_two", T.Uint8)
                 , ("one_three", T.Uint8)
-                )
+                ]
             """
 
             expected_messages = """
@@ -512,12 +512,12 @@ describe TestCase, "renames":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
-            some_params = (
+            some_params = [
                   ("one_one", T.Uint8)
                 , ("one_two", T.Uint8)
                 , ("one_four", T.Uint8)
                 , ("two_stuff", T.Uint8)
-                )
+                ]
             """
 
             expected_messages = """

@@ -107,17 +107,17 @@ describe TestCase, "Without adjustments":
 
 
             expected_fields = """
-            some_params = (
+            some_params = [
                   ("one", T.Bytes(2 * 8))
                 , ("two", T.Bytes(6 * 8))
                 , ("three", T.Uint32)
-                )
+                ]
 
-            more_params = (
+            more_params = [
                   ("reserved4", T.Reserved(8))
                 , *some_params
                 , ("reset", T.Uint32)
-                )
+                ]
             """
 
             expected_messages = """

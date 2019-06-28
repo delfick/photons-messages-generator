@@ -93,9 +93,9 @@ describe TestCase, "Output":
             def example():
               pass
 
-            some_params = (
+            some_params = [
                   ("one", T.Uint8.enum(enums.SomeEnum))
-                )
+                ]
             """
 
             expected_one = """

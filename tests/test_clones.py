@@ -99,24 +99,24 @@ describe TestCase, "clones":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
-            some_params_with_optionals = (
+            some_params_with_optionals = [
                   ("one", T.Uint8.default(0).transform().optional())
                 , ("two", T.Uint8.transform().optional())
                 , ("three", T.Uint8.default(30))
                 , ("four", T.Uint8.dynamic())
                 , ("five", T.Uint8.other())
-                )
+                ]
 
             class ParamsOptionals(dictobj.PacketSpec):
                 fields = some_params_with_optionals
 
-            some_params = (
+            some_params = [
                   ("one", T.Uint8.default(0).transform())
                 , ("two", T.Uint8.default(20).transform())
                 , ("three", T.Uint8.default(30))
                 , ("four", T.Uint8.default(30).dynamic())
                 , ("five", T.Uint8.other())
-                )
+                ]
             """
 
             expected_messages = """
@@ -227,32 +227,32 @@ describe TestCase, "clones":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
-            some_params_with_optionals = (
+            some_params_with_optionals = [
                   ("one", T.Uint8.default(0).transform().optional())
                 , ("two", T.Uint8.transform().optional())
                 , ("three", T.Uint8.default(30))
                 , ("four", T.Uint8.dynamic())
                 , ("five", T.Uint8.other())
-                )
+                ]
 
             class ParamsOptionals(dictobj.PacketSpec):
                 fields = some_params_with_optionals
 
-            some_params = (
+            some_params = [
                   ("one", T.Uint8.default(0).transform())
                 , ("two", T.Uint8.default(20).transform())
                 , ("three", T.Uint8.default(30))
                 , ("four", T.Uint8.default(30).dynamic())
                 , ("five", T.Uint8.other())
-                )
+                ]
             
-            another_params = (
+            another_params = [
                   *some_params_with_optionals
-                )
+                ]
             
-            more_params = (
+            more_params = [
                   ("params", T.Bytes(40 * 3).many(lambda pkt: ParamsOptionals))
-                )
+                ]
             """
 
             output.assertFileContents("fields.py", expected_fields)

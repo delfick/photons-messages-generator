@@ -162,9 +162,9 @@ describe TestCase, "Types":
                 , lambda value: float(value) / 1000
                 ).allow_float()
             
-            some_params = (
+            some_params = [
                   ("one", duration_type)
-                )
+                ]
             """
 
             expected_messages = """
@@ -337,9 +337,9 @@ describe TestCase, "Types":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
-            some_params = (
+            some_params = [
                   ("one", T.String(5 * 8).default("hello").optional())
-                )
+                ]
             """
 
             expected_messages = """
@@ -415,9 +415,9 @@ describe TestCase, "Types":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
-            some_params = (
+            some_params = [
                   ("one", T.Blah().default(0).transform())
-                )
+                ]
             """
 
             expected_messages = """
@@ -507,7 +507,7 @@ describe TestCase, "Types":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
-            some_params = (
+            some_params = [
                   ("one", T.Bool)
                 , ("two", T.Bool)
                 , ("three", T.Bool)
@@ -516,7 +516,7 @@ describe TestCase, "Types":
                 , ("six", T.Bool)
                 , ("seven", T.Bool)
                 , ("eight", T.Bool)
-                )
+                ]
             """
 
             expected_messages = """
@@ -649,9 +649,9 @@ describe TestCase, "Types":
             """
 
             expected_fields = """
-            some_params = (
+            some_params = [
                   ("one", T.Uint8.enum(enums.SomeEnum).default(enums.SomeEnum.ONE))
-                )
+                ]
             """
 
             expected_messages = """
@@ -818,11 +818,11 @@ describe TestCase, "Types":
             """
 
             expected_fields = """
-            some_params = (
+            some_params = [
                   ("one", T.Uint8.enum(enums.SomeEnum, allow_unknown=True))
                 , ("two", T.Uint8.enum(enums.SomeOtherEnum))
                 , ("three", T.Uint8.enum(enums.SomeEnum, allow_unknown=True).default(enums.SomeEnum.ONE))
-                )
+                ]
             """
 
             expected_messages = """
