@@ -93,9 +93,13 @@ describe TestCase, "Output":
             def example():
               pass
 
+            # fmt: off
+
             some_params = [
                   ("one", T.Uint8.enum(enums.SomeEnum))
                 ]
+
+            # fmt: on
             """
 
             expected_one = """
@@ -103,6 +107,8 @@ describe TestCase, "Output":
             from photons_messages import enums
 
             from photons_protocol.messages import Messages, T
+
+            # fmt: off
 
             ########################
             ###   ONE
@@ -113,11 +119,15 @@ describe TestCase, "Output":
                     , ("one", T.Uint8)
                     )
 
+            # fmt: on
+
             __all__ = ["OneMessages"]
             """
 
             expected_two = """
             from photons_protocol.messages import Messages, T
+
+            # fmt: off
 
             ########################
             ###   TWO
@@ -127,6 +137,8 @@ describe TestCase, "Output":
                 PacketThing = msg(2
                     , ("one", T.Uint8)
                     )
+
+            # fmt: on
 
             __all__ = ["TwoMessages"]
             """

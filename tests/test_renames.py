@@ -64,12 +64,18 @@ describe TestCase, "renames":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
+            # fmt: off
+
             some_params = [
                   ("one_thing", T.Uint8)
                 ]
+
+            # fmt: on
             """
 
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -92,6 +98,8 @@ describe TestCase, "renames":
                 StateThings = msg(4
                     , ("the_field", T.Uint8)
                     )
+
+            # fmt: on
 
             __all__ = ["OneMessages"]
             """
@@ -145,12 +153,18 @@ describe TestCase, "renames":
             """
 
             expected_fields = """
+            # fmt: off
+
             some_params = [
                   ("one", T.Uint8.enum(enums.RenamedEnum))
                 ]
+
+            # fmt: on
             """
 
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -159,6 +173,8 @@ describe TestCase, "renames":
                 PacketWithEnum = msg(1
                     , ("enum", T.Uint8.enum(enums.RenamedEnum))
                     )
+
+            # fmt: on
 
             __all__ = ["OneMessages"]
             """
@@ -220,6 +236,8 @@ describe TestCase, "renames":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
+            # fmt: off
+
             renamed_params = [
                   ("one", T.Uint8)
                 ]
@@ -235,9 +253,13 @@ describe TestCase, "renames":
             more_params = [
                   ("params", T.Bytes(8 * 3).many(lambda pkt: RenamedParamsKls))
                 ]
+
+            # fmt: on
             """
 
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -247,6 +269,8 @@ describe TestCase, "renames":
                     , *fields.renamed_params
                     , ("many_params", T.Bytes(8 * 3).many(lambda pkt: fields.RenamedParamsKls))
                     )
+
+            # fmt: on
 
             __all__ = ["OneMessages"]
             """
@@ -277,9 +301,13 @@ describe TestCase, "renames":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
+            # fmt: off
+
             some_params = [
                   ("hello", T.Uint8)
                 ]
+
+            # fmt: on
             """
 
             output.assertFileContents("fields.py", expected_fields)
@@ -309,9 +337,13 @@ describe TestCase, "renames":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
+            # fmt: off
+
             example_params = [
                   ("hello", T.Uint8)
                 ]
+
+            # fmt: on
             """
 
             output.assertFileContents("fields.py", expected_fields)
@@ -417,14 +449,20 @@ describe TestCase, "renames":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
+            # fmt: off
+
             some_params = [
                   ("one_one", T.Uint8)
                 , ("one_two", T.Uint8)
                 , ("one_three", T.Uint8)
                 ]
+
+            # fmt: on
             """
 
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -441,6 +479,8 @@ describe TestCase, "renames":
                     , ("field_two", T.Uint8)
                     , ("field_three", T.Uint8)
                     )
+
+            # fmt: on
 
             __all__ = ["OneMessages"]
             """
@@ -512,15 +552,21 @@ describe TestCase, "renames":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
+            # fmt: off
+
             some_params = [
                   ("one_one", T.Uint8)
                 , ("one_two", T.Uint8)
                 , ("one_four", T.Uint8)
                 , ("two_stuff", T.Uint8)
                 ]
+
+            # fmt: on
             """
 
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -539,6 +585,8 @@ describe TestCase, "renames":
                 PacketExampleThree = msg(2
                     , ("attr_stuff", T.Uint8)
                     )
+
+            # fmt: on
 
             __all__ = ["OneMessages"]
             """
@@ -592,6 +640,8 @@ describe TestCase, "renames":
 
         with self.generate(src, adjustments) as output:
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -601,10 +651,14 @@ describe TestCase, "renames":
                     , ("one", T.Uint8)
                     )
 
+            # fmt: on
+
             __all__ = ["OneMessages"]
             """
 
             expected_other = """
+            # fmt: off
+
             ########################
             ###   OTHER
             ########################
@@ -613,6 +667,8 @@ describe TestCase, "renames":
                 PacketThing = msg(2
                     , ("one", T.Uint8)
                     )
+
+            # fmt: on
 
             __all__ = ["OtherMessages"]
             """
@@ -712,6 +768,8 @@ describe TestCase, "renames":
 
         with self.generate(src, adjustments) as output:
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   CORE
             ########################
@@ -729,6 +787,8 @@ describe TestCase, "renames":
                 PacketThing = msg(2
                     , ("one", T.Uint8)
                     )
+
+            # fmt: on
 
             __all__ = ["CoreMessages", "OneMessages"]
             """

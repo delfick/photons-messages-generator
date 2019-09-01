@@ -107,6 +107,8 @@ describe TestCase, "Without adjustments":
 
 
             expected_fields = """
+            # fmt: off
+
             some_params = [
                   ("one", T.Bytes(2 * 8))
                 , ("two", T.Bytes(6 * 8))
@@ -118,9 +120,13 @@ describe TestCase, "Without adjustments":
                 , *some_params
                 , ("reset", T.Uint32)
                 ]
+
+            # fmt: on
             """
 
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   DEVICE
             ########################
@@ -147,6 +153,8 @@ describe TestCase, "Without adjustments":
                     , ("blah", T.Uint8)
                     , ("reserved5", T.Reserved(32))
                     )
+
+            # fmt: on
 
             __all__ = ["DeviceMessages", "OtherMessages"]
             """

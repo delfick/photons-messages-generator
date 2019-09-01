@@ -99,6 +99,8 @@ describe TestCase, "clones":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
+            # fmt: off
+
             some_params_with_optionals = [
                   ("one", T.Uint8.default(0).transform().optional())
                 , ("two", T.Uint8.transform().optional())
@@ -117,9 +119,13 @@ describe TestCase, "clones":
                 , ("four", T.Uint8.default(30).dynamic())
                 , ("five", T.Uint8.other())
                 ]
+
+            # fmt: on
             """
 
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -136,6 +142,8 @@ describe TestCase, "clones":
                 AnotherExample = msg(3
                     , ("params", T.Bytes(40 * 3).many(lambda pkt: fields.ParamsOptionals))
                     )
+
+            # fmt: on
             
             __all__ = ["OneMessages"]
             """
@@ -227,6 +235,8 @@ describe TestCase, "clones":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
+            # fmt: off
+
             some_params_with_optionals = [
                   ("one", T.Uint8.default(0).transform().optional())
                 , ("two", T.Uint8.transform().optional())
@@ -253,6 +263,8 @@ describe TestCase, "clones":
             more_params = [
                   ("params", T.Bytes(40 * 3).many(lambda pkt: ParamsOptionals))
                 ]
+
+            # fmt: on
             """
 
             output.assertFileContents("fields.py", expected_fields)

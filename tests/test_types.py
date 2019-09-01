@@ -157,6 +157,8 @@ describe TestCase, "Types":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
+            # fmt: off
+
             duration_type = T.Uint32.default(0).transform(
                   lambda _, value: int(1000 * float(value))
                 , lambda value: float(value) / 1000
@@ -165,9 +167,13 @@ describe TestCase, "Types":
             some_params = [
                   ("one", duration_type)
                 ]
+
+            # fmt: on
             """
 
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -182,6 +188,8 @@ describe TestCase, "Types":
                     , ("thing_duration", fields.duration_type)
                     , ("thing_one", fields.duration_type)
                     )
+
+            # fmt: on
             
             __all__ = ["OneMessages"]
             """
@@ -337,12 +345,18 @@ describe TestCase, "Types":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
+            # fmt: off
+
             some_params = [
                   ("one", T.String(5 * 8).default("hello").optional())
                 ]
+
+            # fmt: on
             """
 
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -357,6 +371,8 @@ describe TestCase, "Types":
                     , ("thing_value", T.String(3 * 8))
                     , ("thing_one", T.String(5 * 8).default("hello").optional())
                     )
+
+            # fmt: on
             
             __all__ = ["OneMessages"]
             """
@@ -415,12 +431,18 @@ describe TestCase, "Types":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
+            # fmt: off
+
             some_params = [
                   ("one", T.Blah().default(0).transform())
                 ]
+
+            # fmt: on
             """
 
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -435,6 +457,8 @@ describe TestCase, "Types":
                     , ("thing_value", T.Other())
                     , ("thing_one", T.Blah().default(0).transform())
                     )
+
+            # fmt: on
             
             __all__ = ["OneMessages"]
             """
@@ -507,6 +531,8 @@ describe TestCase, "Types":
 
         with self.generate(src, adjustments) as output:
             expected_fields = """
+            # fmt: off
+
             some_params = [
                   ("one", T.Bool)
                 , ("two", T.Bool)
@@ -517,9 +543,13 @@ describe TestCase, "Types":
                 , ("seven", T.Bool)
                 , ("eight", T.Bool)
                 ]
+
+            # fmt: on
             """
 
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -555,6 +585,8 @@ describe TestCase, "Types":
                     , ("thing_seven", T.Bool)
                     , ("thing_eight", T.Bool)
                     )
+
+            # fmt: on
             
             __all__ = ["OneMessages"]
             """
@@ -649,12 +681,18 @@ describe TestCase, "Types":
             """
 
             expected_fields = """
+            # fmt: off
+
             some_params = [
                   ("one", T.Uint8.enum(enums.SomeEnum).default(enums.SomeEnum.ONE))
                 ]
+
+            # fmt: on
             """
 
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -663,6 +701,8 @@ describe TestCase, "Types":
                 PacketExample = msg(1
                     , ("one", T.Uint8.enum(enums.SomeEnum).default(enums.SomeEnum.TWO))
                     )
+
+            # fmt: on
             
             __all__ = ["OneMessages"]
             """
@@ -818,14 +858,20 @@ describe TestCase, "Types":
             """
 
             expected_fields = """
+            # fmt: off
+
             some_params = [
                   ("one", T.Uint8.enum(enums.SomeEnum, allow_unknown=True))
                 , ("two", T.Uint8.enum(enums.SomeOtherEnum))
                 , ("three", T.Uint8.enum(enums.SomeEnum, allow_unknown=True).default(enums.SomeEnum.ONE))
                 ]
+
+            # fmt: on
             """
 
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -836,6 +882,8 @@ describe TestCase, "Types":
                     , ("five", T.Uint8.enum(enums.BestEnum, allow_unknown=True))
                     , ("six", T.Uint8.enum(enums.BestEnum, allow_unknown=True).default(enums.BestEnum.EIGHT))
                     )
+
+            # fmt: on
             
             __all__ = ["OneMessages"]
             """

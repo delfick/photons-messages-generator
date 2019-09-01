@@ -46,6 +46,8 @@ describe TestCase, "ignoring structs":
             """
 
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -63,6 +65,8 @@ describe TestCase, "ignoring structs":
                 PacketThing = msg(2
                     , ("one", T.Bytes(3 * 8))
                     )
+
+            # fmt: on
             
             __all__ = ["OneMessages", "TwoMessages"]
             """
@@ -146,6 +150,8 @@ describe TestCase, "ignoring structs":
             """
 
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -168,6 +174,8 @@ describe TestCase, "ignoring structs":
                     , ("one", T.Bytes(9 * 8).default(b'things').other())
                     , ("field", T.Bytes(3 * 8).default(b'field').option())
                     )
+
+            # fmt: on
             
             __all__ = ["OneMessages", "TwoMessages"]
             """
@@ -221,6 +229,8 @@ describe TestCase, "ignoring structs":
             """
 
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -239,6 +249,8 @@ describe TestCase, "ignoring structs":
                 PacketThing = msg(2
                     , ("one", T.Bytes(8 * 3))
                     )
+
+            # fmt: on
             
             __all__ = ["OneMessages", "TwoMessages"]
             """
@@ -274,6 +286,8 @@ describe TestCase, "ignoring structs":
             """
 
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -283,6 +297,8 @@ describe TestCase, "ignoring structs":
                     , ("one", T.Bytes(10 * 8))
                     , ("two", T.Bytes(20 * 8))
                     )
+
+            # fmt: on
 
             __all__ = ["OneMessages"]
             """

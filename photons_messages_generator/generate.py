@@ -29,18 +29,22 @@ def write_enums(options, src, adjustments, output_folder):
 
 def write_fields(options, src, adjustments, output_folder):
     with options.file(output_folder) as write_line:
-        if options.static:
-            write_line(options.static.strip())
-            write_line("")
-
-        for options in adjustments.types.values():
-            write_line(f"{options.name} = {options.format(in_fields=True)}")
-            write_line("")
-
         want = []
         for i, struct in enumerate(src.groups):
             if struct.full_name not in adjustments.ignore:
                 want.append(struct)
+
+        if options.static:
+            write_line(options.static.strip())
+            write_line("")
+
+        if options.static or adjustments.types or want:
+            write_line("# fmt: off")
+            write_line("")
+
+        for opts in adjustments.types.values():
+            write_line(f"{opts.name} = {opts.format(in_fields=True)}")
+            write_line("")
 
         for num, struct in enumerate(want):
             write_line(f"{struct.name} = [")
@@ -65,6 +69,10 @@ def write_fields(options, src, adjustments, output_folder):
 
                 if num != len(want) - 1:
                     write_line("")
+
+        if options.static or adjustments.types or want:
+            write_line("")
+            write_line("# fmt: on")
 
 def write_messages_class(write_line, namespace, packets, src, adjustments):
     write_line("#" * 24)
@@ -144,9 +152,15 @@ def write_packets(options_list, src, adjustments, output_folder):
 
             klses = []
 
+            write_line("# fmt: off")
+            write_line("")
+
             for namespace in by_output[tuple(options.dest)]:
                 packets = sorted(by_namespace[namespace], key=lambda pkt: pkt.pkt_type)
                 klses.append(write_messages_class(write_line, namespace, packets, src, adjustments))
+
+            write_line("# fmt: on")
+            write_line("")
 
             write_line(f"__all__ = {json.dumps(klses)}")
 

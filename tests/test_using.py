@@ -47,6 +47,8 @@ describe TestCase, "Using helper":
 
         with self.generate(src, adjustments) as output:
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -59,6 +61,8 @@ describe TestCase, "Using helper":
                     )
             
                 StatePacket = SetPacket.using(2)
+
+            # fmt: on
             
             __all__ = ["OneMessages"]
             """
@@ -116,6 +120,8 @@ describe TestCase, "Using helper":
 
         with self.generate(src, adjustments) as output:
             expected_messages = """
+            # fmt: off
+
             ########################
             ###   ONE
             ########################
@@ -128,6 +134,8 @@ describe TestCase, "Using helper":
                     )
             
                 StatePacket = SetPacket.using(2)
+
+            # fmt: on
             
             __all__ = ["OneMessages"]
             """
