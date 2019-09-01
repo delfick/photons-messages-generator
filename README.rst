@@ -10,6 +10,9 @@ https://github.com/delfick/photons-core
 Changelog
 ---------
 
+0.5.4 - 1 September 2019
+    * Emit fmt: off and fmt: on stanzas so black doesn't destroy the code
+
 0.5.3 - 28 June 2019
     * Emit fields as lists instead of tuples to ensure it's a list when there's
       only one item in it.
