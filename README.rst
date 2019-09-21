@@ -10,7 +10,7 @@ https://github.com/delfick/photons-core
 Changelog
 ---------
 
-0.6.1 - TBD
+0.6.1 - 21 September 2019
     * Formatted code with black and converted tests to pytest
     * Upgraded to `delfick_project <https://delfick-project.readthedocs.io/en/latest/>`_
 
