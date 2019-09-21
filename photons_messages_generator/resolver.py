@@ -18,7 +18,7 @@ class Resolver:
 
     def resolve(self):
         for struct in self.src.groups:
-            struct.many_options = self.adjustments.many_options(struct.full_name)
+            struct.multi_options = self.adjustments.multi_options(struct.full_name)
 
         by_fields = defaultdict(list)
         for packet in self.src.packets:
@@ -104,7 +104,7 @@ class Resolver:
         for name, clone in self.adjustments.clones.items():
             if name in names:
                 raise errors.OverridingStructWithClone(existing=name)
-            self.src.groups.append(CloneStruct(name=name, many_options=clone.many_options))
+            self.src.groups.append(CloneStruct(name=name, multi_options=clone.multi_options))
 
     def generate_clones(self):
         for name, clone in self.adjustments.clones.items():

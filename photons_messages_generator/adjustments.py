@@ -93,7 +93,7 @@ class AdjustField(dictobj.Spec):
     override_struct = dictobj.NullableField(sb.string_spec)
     special_type = dictobj.NullableField(sb.string_spec)
 
-class Many(dictobj.Spec):
+class MultiOptions(dictobj.Spec):
     name = dictobj.Field(sb.string_spec, wrapper=sb.required)
     cache_amount = dictobj.NullableField(sb.integer_spec)
 
@@ -108,7 +108,7 @@ class StructAdjustment(dictobj.Spec):
     rename = dictobj.NullableField(sb.string_spec)
     fields = dictobj.Field(sb.dictof(sb.string_spec(), adjust_field_spec()))
     using = dictobj.NullableField(sb.string_spec)
-    many_options = dictobj.NullableField(Many.FieldSpec())
+    multi_options = dictobj.NullableField(MultiOptions.FieldSpec())
     reserved_start = dictobj.NullableField(sb.integer_spec)
     namespace = dictobj.NullableField(sb.string_spec)
     multi = dictobj.NullableField(sb.string_spec)
@@ -120,11 +120,11 @@ class CloneField(dictobj.Spec):
 class Clone(dictobj.Spec):
     cloning = dictobj.Field(sb.string_spec, wrapper=sb.required)
     fields = dictobj.Field(sb.dictof(sb.string_spec(), CloneField.FieldSpec()))
-    many_options = dictobj.NullableField(Many.FieldSpec())
+    multi_options = dictobj.NullableField(MultiOptions.FieldSpec())
 
     def clone_struct(self, struct):
         clone = struct.clone()
-        clone.many_options = self.many_options
+        clone.multi_options = self.multi_options
 
         fields = []
         for field in struct.item_fields:
@@ -219,10 +219,10 @@ class Adjustments(dictobj.Spec):
             return field[attr]
         return when_missing
 
-    def many_options(self, parent):
+    def multi_options(self, parent):
         parent = self.changes.get(parent)
         if parent:
-            return parent.many_options
+            return parent.multi_options
 
     def rename(self, name, is_struct=False):
         parent = self.changes.get(name)

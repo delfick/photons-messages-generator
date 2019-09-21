@@ -52,20 +52,25 @@ def write_fields(options, src, adjustments, output_folder):
                 indent = "    , "
                 if i == 0:
                     indent = indent.replace(",", " ")
-                write_line(f"{indent}{field.format(in_fields=True)}")
+                try:
+                    write_line(f"{indent}{field.format(in_fields=True)}")
+                except errors.BadSizeBytes as error:
+                    error.kwargs["struct_name"] = struct.name
+                    error.kwargs["field_name"] = field.name
+                    raise
             write_line("    ]")
 
             if num != len(want) - 1:
                 write_line("")
 
-            if struct.many_options is not None:
+            if struct.multi_options is not None:
                 if num == len(want) - 1:
                     write_line("")
 
-                write_line(f"class {struct.many_name}(dictobj.PacketSpec):")
+                write_line(f"class {struct.multi_name}(dictobj.PacketSpec):")
                 write_line(f"    fields = {struct.name}")
-                if struct.many_options.cache_amount is not None:
-                    write_line(f"{struct.many_name}.Meta.cache = LRU({struct.many_options.cache_amount})")
+                if struct.multi_options.cache_amount is not None:
+                    write_line(f"{struct.multi_name}.Meta.cache = LRU({struct.multi_options.cache_amount})")
 
                 if num != len(want) - 1:
                     write_line("")
@@ -97,7 +102,12 @@ def write_messages_class(write_line, namespace, packets, src, adjustments):
         end = "" if has_fields else ")"
         write_line(f"    {packet.name} = msg({packet.pkt_type}{end}")
         for field in packet.item_fields:
-            write_line(f"        , {field.format()}")
+            try:
+                write_line(f"        , {field.format()}")
+            except errors.BadSizeBytes as error:
+                error.kwargs["packet_name"] = packet.name
+                error.kwargs["field_name"] = field.name
+                raise
         if multi:
             if len(packet.item_fields) > 0:
                 write_line("")

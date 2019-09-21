@@ -58,7 +58,7 @@ describe TestCase, "clones":
         clones:
           some_params_with_optionals:
             cloning: SomeParams
-            many_options:
+            multi_options:
               name: ParamsOptionals
             fields:
               One:
@@ -140,7 +140,7 @@ describe TestCase, "clones":
                     )
 
                 AnotherExample = msg(3
-                    , ("params", T.Bytes(40 * 3).many(lambda pkt: fields.ParamsOptionals))
+                    , ("params", T.Bytes(40).multiple(3, kls=fields.ParamsOptionals))
                     )
 
             # fmt: on
@@ -194,7 +194,7 @@ describe TestCase, "clones":
         clones:
           some_params_with_optionals:
             cloning: SomeParams
-            many_options:
+            multi_options:
               name: ParamsOptionals
             fields:
               One:
@@ -261,7 +261,7 @@ describe TestCase, "clones":
                 ]
             
             more_params = [
-                  ("params", T.Bytes(40 * 3).many(lambda pkt: ParamsOptionals))
+                  ("params", T.Bytes(40).multiple(3, kls=ParamsOptionals))
                 ]
 
             # fmt: on

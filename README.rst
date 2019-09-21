@@ -10,6 +10,9 @@ https://github.com/delfick/photons-core
 Changelog
 ---------
 
+0.6.0 - TBD
+    * I changed the many option in photons, it is now "multiple" instead
+
 0.5.4 - 1 September 2019
     * Emit fmt: off and fmt: on stanzas so black doesn't destroy the code
 

@@ -6,8 +6,8 @@ class GeneratorError(DelfickError):
 class UnexpectedEnumName(GeneratorError):
     desc = "enum name was unexpected"
 
-class ExpectedManyName(GeneratorError):
-    desc = "struct needs to be specified with a many name"
+class ExpectedMultiName(GeneratorError):
+    desc = "struct needs to be specified with a multiple name"
 
 class CannotExpand(GeneratorError):
     desc = "Cannot expand fields that aren't packets"
@@ -62,3 +62,6 @@ class InvalidName(GeneratorError):
 
 class CantBeString(GeneratorError):
     desc = "Cannot replace this type with a string"
+
+class BadSizeBytes(GeneratorError):
+    pass

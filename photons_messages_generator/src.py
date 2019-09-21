@@ -97,17 +97,17 @@ class StructField(dictobj.Spec):
 
 class CloneStruct(dictobj.Spec):
     name = dictobj.Field(sb.string_spec, wrapper=sb.required)
-    many_options = dictobj.NullableField(sb.any_spec)
+    multi_options = dictobj.NullableField(sb.any_spec)
 
     @property
     def full_name(self):
         return self.name
 
     @property
-    def many_name(self):
-        if self.many_options is None:
-            raise errors.ExpectedManyName(f"Struct {self.name} is used in a .many block but has no many_name specified")
-        return self.many_options.name
+    def multi_name(self):
+        if self.multi_options is None:
+            raise errors.ExpectedMultiName(f"Struct {self.name} is used in a .multiple block but has no multi_name specified")
+        return self.multi_options.name
 
 class struct_spec(sb.Spec):
     def normalise_filled(self, meta, val):
@@ -121,13 +121,13 @@ class Struct(dictobj.Spec):
     full_name = dictobj.Field(sb.string_spec, wrapper=sb.required)
     size_bytes = dictobj.Field(sb.integer_spec, wrapper=sb.required)
     item_fields = dictobj.Field(sb.listof(struct_field_spec()))
-    many_options = dictobj.NullableField(sb.any_spec)
+    multi_options = dictobj.NullableField(sb.any_spec)
 
     @property
-    def many_name(self):
-        if self.many_options is None:
-            raise errors.ExpectedManyName(f"Struct {self.name} is used in a .many block but has no many_name specified")
-        return self.many_options.name
+    def multi_name(self):
+        if self.multi_options is None:
+            raise errors.ExpectedMultiName(f"Struct {self.name} is used in a .multiple block but has no multi_name specified")
+        return self.multi_options.name
 
 class packet_spec(sb.Spec):
     def normalise_filled(self, meta, val):

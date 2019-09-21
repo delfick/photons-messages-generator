@@ -230,7 +230,7 @@ describe TestCase, "renames":
         changes:
           SomeParams:
             rename: "renamed_params"
-            many_options:
+            multi_options:
               name: "RenamedParamsKls"
         """
 
@@ -251,7 +251,7 @@ describe TestCase, "renames":
                 ]
 
             more_params = [
-                  ("params", T.Bytes(8 * 3).many(lambda pkt: RenamedParamsKls))
+                  ("params", T.Bytes(8).multiple(3, kls=RenamedParamsKls))
                 ]
 
             # fmt: on
@@ -267,7 +267,7 @@ describe TestCase, "renames":
             class OneMessages(Messages):
                 PacketWithStruct = msg(1
                     , *fields.renamed_params
-                    , ("many_params", T.Bytes(8 * 3).many(lambda pkt: fields.RenamedParamsKls))
+                    , ("many_params", T.Bytes(8).multiple(3, kls=fields.RenamedParamsKls))
                     )
 
             # fmt: on

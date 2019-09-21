@@ -5,7 +5,7 @@ from photons_messages_generator import field_types as ft
 from photons_messages_generator import errors
 
 describe TestCase, "Types":
-    it "complains about structs used as multiple without many_options":
+    it "complains about structs used as multiple without multiple_options":
         src = """
             fields:
               SomeParams:
@@ -30,38 +30,8 @@ describe TestCase, "Types":
         num_reserved_fields_in_frame: 3
         """
 
-        msg = "Struct some_params is used in a .many block but has no many_name specified"
-        with self.fuzzyAssertRaisesError(errors.ExpectedManyName, msg):
-            with self.generate(src, adjustments) as output:
-                pass
-
-    it "complains about enums as multiples":
-        src = """
-            enums:
-              SomeEnum:
-                type: uint8
-                values:
-                  - name: ONE
-                    value: 1
-
-            packets:
-              one:
-                OnePacketExample:
-                  pkt_type: 1
-                  size_bytes: 3
-                  fields:
-                    - name: "Params"
-                      type: "[3]<SomeEnum>"
-                      size_bytes: 3
-        """
-
-        adjustments = """
-        num_reserved_fields_in_frame: 3
-        """
-
-        msg = "Enums cannot be multiple"
-        kwargs = {"wanted": 3}
-        with self.fuzzyAssertRaisesError(errors.NonsensicalMultiplier, msg, **kwargs):
+        msg = "Struct some_params is used in a .multiple block but has no multi_name specified"
+        with self.fuzzyAssertRaisesError(errors.ExpectedMultiName, msg):
             with self.generate(src, adjustments) as output:
                 pass
 

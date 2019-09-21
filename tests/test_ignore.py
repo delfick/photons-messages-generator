@@ -213,7 +213,7 @@ describe TestCase, "ignoring structs":
                   fields:
                     - name: "One"
                       type: "[3]<SomeParams>"
-                      size_bytes: 3
+                      size_bytes: 27
         """
 
         adjustments = """
@@ -247,7 +247,7 @@ describe TestCase, "ignoring structs":
             
             class TwoMessages(Messages):
                 PacketThing = msg(2
-                    , ("one", T.Bytes(8 * 3))
+                    , ("one", T.Bytes(72 * 3))
                     )
 
             # fmt: on

@@ -10,7 +10,20 @@ class SimpleType:
         return f"<Simple: {self.multiples}: {self.val}>"
 
     def format(self, size_bytes, **kwargs):
-        return f"{convert_type(self.val, size_bytes)}"
+        multiples = ""
+        if self.multiples > 1:
+            multiples = f".multiple({self.multiples})"
+        if size_bytes % self.multiples != 0:
+            raise errors.BadSizeBytes("Expected size bytes to be divisible by multiple"
+                , multiple=self.multiples
+                , size_bytes=size_bytes
+                )
+
+        if self.val == "byte":
+            multiples = ""
+        else:
+            size_bytes = int(size_bytes / self.multiples)
+        return f"{convert_type(self.val, size_bytes)}{multiples}"
 
 class StringType:
     def __repr__(self):
@@ -23,10 +36,7 @@ class EnumType:
     def __init__(self, enum, multiples, allow_unknown=False):
         self.enum = enum
         self.allow_unknown = allow_unknown
-        if multiples != 1:
-            raise errors.NonsensicalMultiplier("Enums cannot be multiple"
-                , wanted=multiples
-                )
+        self.multiples = multiples
 
     def value(self, name):
         names = [v.name for v in self.enum.values]
@@ -39,9 +49,12 @@ class EnumType:
 
     def format(self, size_bytes, **kwargs):
         options = ""
+        multiple = ""
         if self.allow_unknown:
             options = ", allow_unknown=True"
-        return f"{convert_type(self.enum.type, size_bytes)}.enum(enums.{self.enum.name}{options})"
+        if self.multiples > 1:
+            multiple = f".multiple({self.multiples})"
+        return f"{convert_type(self.enum.type, size_bytes)}.enum(enums.{self.enum.name}{options}){multiple}"
 
 class StructOverrideType:
     def __init__(self, struct):
@@ -82,12 +95,21 @@ class StructType:
         return f"<Struct: {self.multiples}: {self.struct.name}>"
 
     def format(self, size_bytes, in_fields=False, **kwargs):
-        size_bytes = int(size_bytes / self.multiples * 8)
-        prefix = "" if in_fields else "fields."
-        typ = f"T.Bytes({size_bytes} * {self.multiples})"
+        if size_bytes % self.multiples != 0:
+            raise errors.BadSizeBytes("Expected size bytes to be divisible by multiple"
+                , multiple=self.multiples
+                , size_bytes=size_bytes
+                )
+        size_bytes = int(size_bytes / self.multiples)
+
         if self.ignored:
-            return typ
-        return f"{typ}.many(lambda pkt: {prefix}{self.struct.many_name})"
+            return f"T.Bytes({size_bytes * 8} * {self.multiples})"
+
+        typ = f"T.Bytes({size_bytes * 8})"
+        prefix = "" if in_fields else "fields."
+        if self.struct.multi_name.startswith("lambda"):
+            prefix = ""
+        return f"{typ}.multiple({self.multiples}, kls={prefix}{self.struct.multi_name})"
 
     def expand_fields(self, chain=None, prefix=None, expand_structs=False):
         if chain is None:

@@ -27,7 +27,7 @@ describe TestCase, "Without adjustments":
                 size_bytes: 12
                 fields:
                   - name: "One"
-                    type: "[16]byte"
+                    type: "[2]byte"
                     size_bytes: 2
                   - name: "Two"
                     type: "[6]byte"
