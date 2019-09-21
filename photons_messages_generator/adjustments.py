@@ -85,7 +85,7 @@ class must_be_true_spec(sb.Spec):
         self.name = name
 
     def normalise_filled(self, meta, val):
-        if val != True:
+        if val is not True:
             raise BadSpecValue(f"{self.name} can only be True or not present")
         return val
 
