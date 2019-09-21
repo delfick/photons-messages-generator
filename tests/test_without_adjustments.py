@@ -1,8 +1,8 @@
 # coding: spec
 
-from photons_messages_generator.test_helpers import TestCase
+from photons_messages_generator import test_helpers as thp
 
-describe TestCase, "Without adjustments":
+describe "Without adjustments":
     it "works":
         src = """
             enums:
@@ -94,7 +94,7 @@ describe TestCase, "Without adjustments":
         num_reserved_fields_in_frame: 3
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_enums = """
             class SomeEnum(Enum):
                 ONE = 1

@@ -10,6 +10,9 @@ https://github.com/delfick/photons-core
 Changelog
 ---------
 
+0.6.1 - TBD
+    * Formatted code with black and converted tests to pytest
+
 0.6.0 - 21 September 2019
     * I changed the many option in photons, it is now "multiple" instead
 

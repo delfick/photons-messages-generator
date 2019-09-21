@@ -1,10 +1,12 @@
 # coding: spec
 
-from photons_messages_generator.test_helpers import TestCase
+from photons_messages_generator import test_helpers as thp
 from photons_messages_generator import field_types as ft
 from photons_messages_generator import errors
 
-describe TestCase, "Types":
+from delfick_error_pytest import assertRaises
+
+describe "Types":
     it "complains about structs used as multiple without multiple_options":
         src = """
             fields:
@@ -31,8 +33,8 @@ describe TestCase, "Types":
         """
 
         msg = "Struct some_params is used in a .multiple block but has no multi_name specified"
-        with self.fuzzyAssertRaisesError(errors.ExpectedMultiName, msg):
-            with self.generate(src, adjustments) as output:
+        with assertRaises(errors.ExpectedMultiName, msg):
+            with thp.generate(src, adjustments) as output:
                 pass
 
     it "complains about cycle packets":
@@ -61,8 +63,8 @@ describe TestCase, "Types":
         """
 
         kwargs = {"chain": ["OneOtherPacket", "OnePacketExample"]}
-        with self.fuzzyAssertRaisesError(errors.CyclicPacketField, **kwargs):
-            with self.generate(src, adjustments) as output:
+        with assertRaises(errors.CyclicPacketField, **kwargs):
+            with thp.generate(src, adjustments) as output:
                 pass
 
     it "can replace a field":
@@ -125,7 +127,7 @@ describe TestCase, "Types":
                 special_type: duration_type
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_fields = """
             # fmt: off
 
@@ -189,8 +191,8 @@ describe TestCase, "Types":
         """
 
         kwargs = {"available": [], "wanted": "duration_type"}
-        with self.fuzzyAssertRaisesError(errors.UnknownSpecialType, **kwargs):
-            with self.generate(src, adjustments) as output:
+        with assertRaises(errors.UnknownSpecialType, **kwargs):
+            with thp.generate(src, adjustments) as output:
                 pass
 
     it "complains if replacing a field with different type":
@@ -229,14 +231,14 @@ describe TestCase, "Types":
 
         msg = "Tried to set type to something that is wrong"
         try:
-            with self.generate(src, adjustments) as output:
+            with thp.generate(src, adjustments) as output:
                 pass
             assert False, "Expected an exception"
         except errors.NotSameType as error:
-            self.assertEqual(error.message, msg)
-            self.assertEqual(error.kwargs["name"], "SomeParams")
-            self.assertEqual(error.kwargs["should_be"].val, "uint8")
-            self.assertEqual(error.kwargs["want"].options.name, "duration_type")
+            assert error.message == msg
+            assert error.kwargs["name"] == "SomeParams"
+            assert error.kwargs["should_be"].val == "uint8"
+            assert error.kwargs["want"].options.name == "duration_type"
 
     it "complains if replacing a non bytes field with a string type":
         src = """
@@ -260,8 +262,8 @@ describe TestCase, "Types":
         """
 
         msg = "Only bytes can be turned into string"
-        with self.fuzzyAssertRaisesError(errors.CantBeString, msg, name="SomeParams"):
-            with self.generate(src, adjustments) as output:
+        with assertRaises(errors.CantBeString, msg, name="SomeParams"):
+            with thp.generate(src, adjustments) as output:
                 pass
 
     it "can replace bytes with a string":
@@ -313,7 +315,7 @@ describe TestCase, "Types":
                 string_type: true
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_fields = """
             # fmt: off
 
@@ -399,7 +401,7 @@ describe TestCase, "Types":
                 override_type: "T.Other()"
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_fields = """
             # fmt: off
 
@@ -499,7 +501,7 @@ describe TestCase, "Types":
                   - Yeah
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_fields = """
             # fmt: off
 
@@ -594,8 +596,8 @@ describe TestCase, "Types":
         """
 
         msg = "Need 32 options but only have 8"
-        with self.fuzzyAssertRaisesError(errors.InvalidBits, msg, field="One", packet="SomeParams"):
-            with self.generate(src, adjustments) as output:
+        with assertRaises(errors.InvalidBits, msg, field="One", packet="SomeParams"):
+            with thp.generate(src, adjustments) as output:
                 pass
 
     it "can understand defaults for enums":
@@ -643,7 +645,7 @@ describe TestCase, "Types":
                 default: "TWO"
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_enums = """
             class SomeEnum(Enum):
                 ONE = 1
@@ -713,8 +715,8 @@ describe TestCase, "Types":
 
         kwargs = {"available": ["ONE", "TWO"], "enum": "SomeEnum", "wanted": "WAT"}
 
-        with self.fuzzyAssertRaisesError(errors.NoSuchEnumValue, **kwargs):
-            with self.generate(src, adjustments) as output:
+        with assertRaises(errors.NoSuchEnumValue, **kwargs):
+            with thp.generate(src, adjustments) as output:
                 pass
 
     it "can understand unknown values for enums":
@@ -804,7 +806,7 @@ describe TestCase, "Types":
                 allow_unknown_enums: true
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_enums = """
             class SomeEnum(Enum):
                 ONE = 1

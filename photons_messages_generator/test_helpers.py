@@ -1,8 +1,4 @@
-from photons_messages_generator.generate import generate
-
-from delfick_error import DelfickErrorTestMixin
 from contextlib import contextmanager
-from unittest import TestCase
 from ruamel.yaml import YAML
 from textwrap import dedent
 import tempfile
@@ -65,19 +61,20 @@ class Output:
                 assert False, f"Expected content to be the same\n{diff}"
 
 
-class TestCase(TestCase, DelfickErrorTestMixin):
-    @contextmanager
-    def generate(self, src, adjustments):
-        with a_temp_dir() as directory:
-            src = YAML(typ="safe").load(src)
-            adjustments = YAML(typ="safe").load(adjustments) or {}
+@contextmanager
+def generate(src, adjustments):
+    with a_temp_dir() as directory:
+        src = YAML(typ="safe").load(src)
+        adjustments = YAML(typ="safe").load(adjustments) or {}
 
-            if "output" not in adjustments:
-                adjustments["output"] = [
-                    {"create": "enums", "dest": "enums.py"},
-                    {"create": "fields", "dest": "fields.py"},
-                    {"create": "packets", "dest": "messages.py", "options": {"include": "*"}},
-                ]
+        if "output" not in adjustments:
+            adjustments["output"] = [
+                {"create": "enums", "dest": "enums.py"},
+                {"create": "fields", "dest": "fields.py"},
+                {"create": "packets", "dest": "messages.py", "options": {"include": "*"}},
+            ]
 
-            generate(src, adjustments, directory)
-            yield Output(directory)
+        from photons_messages_generator.generate import generate
+
+        generate(src, adjustments, directory)
+        yield Output(directory)

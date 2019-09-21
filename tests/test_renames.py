@@ -1,11 +1,12 @@
 # coding: spec
 
-from photons_messages_generator.test_helpers import TestCase
+from photons_messages_generator import test_helpers as thp
 from photons_messages_generator import errors
 
+from delfick_error_pytest import assertRaises
 import keyword
 
-describe TestCase, "renames":
+describe "renames":
     it "auto renames packets and fields":
         src = """
             fields:
@@ -62,7 +63,7 @@ describe TestCase, "renames":
         num_reserved_fields_in_frame: 3
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_fields = """
             # fmt: off
 
@@ -145,7 +146,7 @@ describe TestCase, "renames":
             rename: "RenamedEnum"
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_enums = """
             class RenamedEnum(Enum):
                 ONE = 1
@@ -234,7 +235,7 @@ describe TestCase, "renames":
               name: "RenamedParamsKls"
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_fields = """
             # fmt: off
 
@@ -299,7 +300,7 @@ describe TestCase, "renames":
                 rename: hello
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_fields = """
             # fmt: off
 
@@ -335,7 +336,7 @@ describe TestCase, "renames":
                 rename: hello
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_fields = """
             # fmt: off
 
@@ -373,8 +374,8 @@ describe TestCase, "renames":
 
         msg = "Fields cannot be one of the invalid field names"
         kwargs = {"field": "payload", "parent": "SomeParams", "invalid_names": ["payload"]}
-        with self.fuzzyAssertRaisesError(errors.InvalidName, msg, **kwargs):
-            with self.generate(src, adjustments) as output:
+        with assertRaises(errors.InvalidName, msg, **kwargs):
+            with thp.generate(src, adjustments) as output:
                 pass
 
     it "cannot rename struct field to reserved keywords":
@@ -400,8 +401,8 @@ describe TestCase, "renames":
 
         msg = "Field names cannot be reserved python keywords"
         kwargs = {"field": "finally", "parent": "SomeParams", "invalid_names": keyword.kwlist}
-        with self.fuzzyAssertRaisesError(errors.InvalidName, msg, **kwargs):
-            with self.generate(src, adjustments) as output:
+        with assertRaises(errors.InvalidName, msg, **kwargs):
+            with thp.generate(src, adjustments) as output:
                 pass
 
     it "can rename packets":
@@ -447,7 +448,7 @@ describe TestCase, "renames":
             rename: "ExamplePacket"
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_fields = """
             # fmt: off
 
@@ -550,7 +551,7 @@ describe TestCase, "renames":
                 rename: Stuff
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_fields = """
             # fmt: off
 
@@ -638,7 +639,7 @@ describe TestCase, "renames":
              include: "other"
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_messages = """
             # fmt: off
 
@@ -703,8 +704,8 @@ describe TestCase, "renames":
 
         msg = "Fields cannot be one of the invalid field names"
         kwargs = {"field": "fields", "parent": "OnePacket", "invalid_names": ["payload", "fields"]}
-        with self.fuzzyAssertRaisesError(errors.InvalidName, msg, **kwargs):
-            with self.generate(src, adjustments) as output:
+        with assertRaises(errors.InvalidName, msg, **kwargs):
+            with thp.generate(src, adjustments) as output:
                 pass
 
     it "cannot rename packet field to invalid name":
@@ -732,8 +733,8 @@ describe TestCase, "renames":
 
         msg = "Field names cannot be reserved python keywords"
         kwargs = {"field": "finally", "parent": "OnePacket", "invalid_names": keyword.kwlist}
-        with self.fuzzyAssertRaisesError(errors.InvalidName, msg, **kwargs):
-            with self.generate(src, adjustments) as output:
+        with assertRaises(errors.InvalidName, msg, **kwargs):
+            with thp.generate(src, adjustments) as output:
                 pass
 
     it "can put a packet into a different namespace":
@@ -766,7 +767,7 @@ describe TestCase, "renames":
 
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_messages = """
             # fmt: off
 

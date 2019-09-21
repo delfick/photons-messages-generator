@@ -1,9 +1,11 @@
 # coding: spec
 
-from photons_messages_generator.test_helpers import TestCase
+from photons_messages_generator import test_helpers as thp
 from photons_messages_generator import errors
 
-describe TestCase, "Using helper":
+from delfick_error_pytest import assertRaises
+
+describe "Using helper":
     it "can replace packets with a using construct":
         src = """
             packets:
@@ -45,7 +47,7 @@ describe TestCase, "Using helper":
             using: OneSetPacket
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_messages = """
             # fmt: off
 
@@ -118,7 +120,7 @@ describe TestCase, "Using helper":
             using: OneSetPacket
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_messages = """
             # fmt: off
 
@@ -185,8 +187,8 @@ describe TestCase, "Using helper":
 
         msg = "The two packets have different field names"
         kwargs = {"OneSetPacket": ["One", "Two", "Three"], "OneStatePacket": ["One", "Two", "Four"]}
-        with self.fuzzyAssertRaisesError(errors.BadUsingInstruction, msg, **kwargs):
-            with self.generate(src, adjustments) as output:
+        with assertRaises(errors.BadUsingInstruction, msg, **kwargs):
+            with thp.generate(src, adjustments) as output:
                 pass
 
     it "complains if different number of fields":
@@ -229,8 +231,8 @@ describe TestCase, "Using helper":
 
         msg = "The two packets have different field names"
         kwargs = {"OneSetPacket": ["One", "Two", "Three"], "OneStatePacket": ["One", "Two"]}
-        with self.fuzzyAssertRaisesError(errors.BadUsingInstruction, msg, **kwargs):
-            with self.generate(src, adjustments) as output:
+        with assertRaises(errors.BadUsingInstruction, msg, **kwargs):
+            with thp.generate(src, adjustments) as output:
                 pass
 
     it "complains if fields are different types":
@@ -279,6 +281,6 @@ describe TestCase, "Using helper":
         field_on_set = "\n<<\n\tname: Three\n\ttype: uint8\n>>\n"
         field_on_state = "\n<<\n\tname: Three\n\ttype: uint32\n>>\n"
         kwargs = {"OneSetPacket": field_on_set, "OneStatePacket": field_on_state}
-        with self.fuzzyAssertRaisesError(errors.BadUsingInstruction, msg, **kwargs):
-            with self.generate(src, adjustments) as output:
+        with assertRaises(errors.BadUsingInstruction, msg, **kwargs):
+            with thp.generate(src, adjustments) as output:
                 pass

@@ -1,8 +1,8 @@
 # coding: spec
 
-from photons_messages_generator.test_helpers import TestCase
+from photons_messages_generator import test_helpers as thp
 
-describe TestCase, "Output":
+describe "Output":
     it "can generate static at the top of the file and split packets":
         src = """
             enums:
@@ -78,7 +78,7 @@ describe TestCase, "Output":
             from photons_protocol.messages import Messages, T
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_enums = """
             from enum import Enum
 

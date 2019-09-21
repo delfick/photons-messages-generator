@@ -1,10 +1,12 @@
 # coding: spec
 
-from photons_messages_generator.test_helpers import TestCase
+from photons_messages_generator import test_helpers as thp
 from photons_messages_generator import field_types as ft
 from photons_messages_generator import errors
 
-describe TestCase, "Multiple":
+from delfick_error_pytest import assertRaises
+
+describe "Multiple":
     it "allows multiple of things":
         src = """
             enums:
@@ -71,7 +73,7 @@ describe TestCase, "Multiple":
                 string_type: true
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_enums = """
             class SomeEnum(Enum):
                 ONE = 1
@@ -158,8 +160,8 @@ describe TestCase, "Multiple":
             "field_name": "things",
         }
         msg = "Expected size bytes to be divisible by multiple"
-        with self.fuzzyAssertRaisesError(errors.BadSizeBytes, msg, **kwargs):
-            with self.generate(src, adjustments) as output:
+        with assertRaises(errors.BadSizeBytes, msg, **kwargs):
+            with thp.generate(src, adjustments) as output:
                 pass
 
     it "complains if size bytes and multiples don't line up in a struct field":
@@ -202,6 +204,6 @@ describe TestCase, "Multiple":
             "field_name": "two",
         }
         msg = "Expected size bytes to be divisible by multiple"
-        with self.fuzzyAssertRaisesError(errors.BadSizeBytes, msg, **kwargs):
-            with self.generate(src, adjustments) as output:
+        with assertRaises(errors.BadSizeBytes, msg, **kwargs):
+            with thp.generate(src, adjustments) as output:
                 pass

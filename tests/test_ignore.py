@@ -1,9 +1,11 @@
 # coding: spec
 
-from photons_messages_generator.test_helpers import TestCase
+from photons_messages_generator import test_helpers as thp
 from photons_messages_generator import errors
 
-describe TestCase, "ignoring structs":
+from delfick_error_pytest import assertRaises
+
+describe "ignoring structs":
     it "can replace existing structs with just bytes":
         src = """
             fields:
@@ -41,7 +43,7 @@ describe TestCase, "ignoring structs":
           SomeParams: {}
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_fields = """
             """
 
@@ -145,7 +147,7 @@ describe TestCase, "ignoring structs":
                 extras: "option()"
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_fields = """
             """
 
@@ -224,7 +226,7 @@ describe TestCase, "ignoring structs":
             expanded: true
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_fields = """
             """
 
@@ -281,7 +283,7 @@ describe TestCase, "ignoring structs":
           SomeParams: {}
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_fields = """
             """
 
@@ -327,6 +329,6 @@ describe TestCase, "ignoring structs":
             expanded: true
         """
 
-        with self.fuzzyAssertRaisesError(errors.NoSuchType, wanted="SomeParams"):
-            with self.generate(src, adjustments) as output:
+        with assertRaises(errors.NoSuchType, wanted="SomeParams"):
+            with thp.generate(src, adjustments) as output:
                 pass

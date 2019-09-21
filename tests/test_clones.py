@@ -1,8 +1,8 @@
 # coding: spec
 
-from photons_messages_generator.test_helpers import TestCase
+from photons_messages_generator import test_helpers as thp
 
-describe TestCase, "clones":
+describe "clones":
     it "uses the clone instead of original struct":
         src = """
             fields:
@@ -97,7 +97,7 @@ describe TestCase, "clones":
                 override_struct: some_params_with_optionals
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_fields = """
             # fmt: off
 
@@ -233,7 +233,7 @@ describe TestCase, "clones":
                 override_struct: some_params_with_optionals
         """
 
-        with self.generate(src, adjustments) as output:
+        with thp.generate(src, adjustments) as output:
             expected_fields = """
             # fmt: off
 
