@@ -1,6 +1,7 @@
 valid_enum_types = ["uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64"]
 valid_struct_types = valid_enum_types + ["bool", "float32", "float64", "byte"]
 
+
 def snake_to_camel(s):
     uppercase = False
     final = []
@@ -15,6 +16,7 @@ def snake_to_camel(s):
 
         final.append(ch)
     return "".join(final)
+
 
 def camel_to_snake(s):
     parts = []
@@ -35,6 +37,7 @@ def camel_to_snake(s):
         parts.append("".join(buf))
 
     return "_".join(parts)
+
 
 def convert_type(name, num_bytes):
     if name == "bit":

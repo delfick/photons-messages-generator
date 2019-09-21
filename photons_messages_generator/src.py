@@ -6,9 +6,11 @@ from input_algorithms.errors import BadSpecValue
 from input_algorithms.dictobj import dictobj
 from input_algorithms import spec_base as sb
 
+
 class EnumValue(dictobj.Spec):
     name = dictobj.Field(sb.string_spec, wrapper=sb.required)
     value = dictobj.Field(sb.integer_spec, wrapper=sb.required)
+
 
 class Enum(dictobj.Spec):
     name = dictobj.Field(sb.string_spec, wrapper=sb.required)
@@ -16,12 +18,15 @@ class Enum(dictobj.Spec):
     type = dictobj.Field(sb.string_choice_spec(valid_enum_types), wrapper=sb.required)
     values = dictobj.Field(sb.listof(EnumValue.FieldSpec()))
 
+
 class struct_field_spec(sb.Spec):
     def normalise_filled(self, meta, val):
         val = sb.dictionary_spec().normalise(meta, val)
         if val.get("type") == "reserved":
             if "name" in val:
-                raise BadSpecValue("Expected reserved field to not have a name", meta=meta.at("name"))
+                raise BadSpecValue(
+                    "Expected reserved field to not have a name", meta=meta.at("name")
+                )
         else:
             if "name" not in val:
                 raise BadSpecValue("Expected field to have a name", meta=meta.at("name"))
@@ -31,6 +36,7 @@ class struct_field_spec(sb.Spec):
             val["original_type"] = val["type"]
 
         return StructField.FieldSpec().normalise(meta, val)
+
 
 class StructField(dictobj.Spec):
     name = dictobj.NullableField(sb.string_spec)
@@ -56,9 +62,9 @@ class StructField(dictobj.Spec):
             return type_info
 
         if isinstance(self.type, ft.StructType):
-            return f"(\"{self.name}\", {type_info})"
+            return f'("{self.name}", {type_info})'
         else:
-            return f"(\"{self.name}\", {type_info})"
+            return f'("{self.name}", {type_info})'
 
     def format_extras(self):
         if self.default is not None:
@@ -84,7 +90,9 @@ class StructField(dictobj.Spec):
         if not isinstance(self.type, ft.StructType) or getattr(self.type, "expanded", False):
             prefix.append(self.name)
 
-        yield from self.type.expand_fields(chain=chain, prefix=prefix, expand_structs=expand_structs)
+        yield from self.type.expand_fields(
+            chain=chain, prefix=prefix, expand_structs=expand_structs
+        )
 
     def with_prefix(self, prefix):
         clone = self.clone()
@@ -94,6 +102,7 @@ class StructField(dictobj.Spec):
 
         clone.name = "".join(prefix + [self.name])
         return clone
+
 
 class CloneStruct(dictobj.Spec):
     name = dictobj.Field(sb.string_spec, wrapper=sb.required)
@@ -106,8 +115,11 @@ class CloneStruct(dictobj.Spec):
     @property
     def multi_name(self):
         if self.multi_options is None:
-            raise errors.ExpectedMultiName(f"Struct {self.name} is used in a .multiple block but has no multi_name specified")
+            raise errors.ExpectedMultiName(
+                f"Struct {self.name} is used in a .multiple block but has no multi_name specified"
+            )
         return self.multi_options.name
+
 
 class struct_spec(sb.Spec):
     def normalise_filled(self, meta, val):
@@ -115,6 +127,7 @@ class struct_spec(sb.Spec):
         if "fields" in val:
             val["item_fields"] = val["fields"]
         return Struct.FieldSpec().normalise(meta, val)
+
 
 class Struct(dictobj.Spec):
     name = dictobj.Field(sb.string_spec, wrapper=sb.required)
@@ -126,8 +139,11 @@ class Struct(dictobj.Spec):
     @property
     def multi_name(self):
         if self.multi_options is None:
-            raise errors.ExpectedMultiName(f"Struct {self.name} is used in a .multiple block but has no multi_name specified")
+            raise errors.ExpectedMultiName(
+                f"Struct {self.name} is used in a .multiple block but has no multi_name specified"
+            )
         return self.multi_options.name
+
 
 class packet_spec(sb.Spec):
     def normalise_filled(self, meta, val):
@@ -135,6 +151,7 @@ class packet_spec(sb.Spec):
         if "fields" in val:
             val["item_fields"] = val["fields"]
         return Packet.FieldSpec().normalise(meta, val)
+
 
 class Packet(dictobj.Spec):
     name = dictobj.Field(sb.string_spec, wrapper=sb.required)
@@ -144,9 +161,11 @@ class Packet(dictobj.Spec):
     size_bytes = dictobj.Field(sb.integer_spec, wrapper=sb.required)
     item_fields = dictobj.Field(sb.listof(struct_field_spec()), wrapper=sb.required)
 
+
 class Type(dictobj.Spec):
     multiples = dictobj.Field(sb.integer_spec, wrapper=sb.required)
     type = dictobj.Field(sb.any_spec, wrapper=sb.required)
+
 
 class named_spec(sb.Spec):
     def __init__(self, spec):
@@ -166,6 +185,7 @@ class named_spec(sb.Spec):
 
         return final
 
+
 class packets_spec(sb.Spec):
     def normalise_empty(self, meta):
         return []
@@ -184,6 +204,7 @@ class packets_spec(sb.Spec):
                 final.append(packet_spec().normalise(meta.at(name), v))
 
         return final
+
 
 class Src(dictobj.Spec):
     enums = dictobj.Field(named_spec(Enum.FieldSpec()))

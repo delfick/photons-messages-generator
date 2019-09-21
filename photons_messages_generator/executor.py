@@ -9,24 +9,24 @@ import os
 
 this_dir = os.path.dirname(__file__)
 
+
 def make_parser():
-    parser = argparse.ArgumentParser(description = "messages generator")
+    parser = argparse.ArgumentParser(description="messages generator")
 
     def add_argument(name, **kwargs):
         environment_name = name.upper()
 
         if environment_name in os.environ:
-            kwargs['default'] = os.environ[environment_name]
+            kwargs["default"] = os.environ[environment_name]
 
-        parser.add_argument(f"--{name.replace('_', '-')}"
-            , **kwargs
-            )
+        parser.add_argument(f"--{name.replace('_', '-')}", **kwargs)
 
     add_argument("src")
-    add_argument("adjustments", type=argparse.FileType('r'))
+    add_argument("adjustments", type=argparse.FileType("r"))
     add_argument("output_folder")
 
     return parser
+
 
 def main(argv=None):
     setup_logging()
@@ -35,11 +35,13 @@ def main(argv=None):
     args = parser.parse_args(argv)
 
     if not os.path.exists(args.src):
-        raise Exception("Couldn't find the source yaml file, did you `git submodule update --init` ?")
+        raise Exception(
+            "Couldn't find the source yaml file, did you `git submodule update --init` ?"
+        )
 
     with open(args.src) as fle:
-        src = YAML(typ='safe').load(fle)
-    adjustments = YAML(typ='safe').load(args.adjustments)
+        src = YAML(typ="safe").load(fle)
+    adjustments = YAML(typ="safe").load(args.adjustments)
 
     if not os.path.exists(args.output_folder):
         os.makedirs(args.output_folder)

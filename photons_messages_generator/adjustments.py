@@ -11,10 +11,12 @@ from input_algorithms.meta import Meta
 from contextlib import contextmanager
 import os
 
+
 class override_type_spec(sb.Spec):
     def normalise_filled(self, meta, val):
         val = sb.string_spec().normalise(meta, val)
         return ft.OverrideType(val)
+
 
 class SpecialType(dictobj.Spec):
     name = dictobj.Field(sb.string_spec, wrapper=sb.required)
@@ -26,18 +28,20 @@ class SpecialType(dictobj.Spec):
 
     def format(self, in_fields=False):
         meta = Meta({}, []).at("special_types").at(self.name)
-        field = struct_field_spec().normalise(meta
-            , dict(
-                  name = self.name
-                , full_name = self.name
-                , type = self.type
-                , size_bytes = self.size_bytes
-                , default = self.default
-                , extras = self.extras
-                )
-            )
+        field = struct_field_spec().normalise(
+            meta,
+            dict(
+                name=self.name,
+                full_name=self.name,
+                type=self.type,
+                size_bytes=self.size_bytes,
+                default=self.default,
+                extras=self.extras,
+            ),
+        )
         field.type = ft.SimpleType(self.type, self.multiples)
         return field.format(type_only=True, in_fields=in_fields)
+
 
 class special_types_spec(sb.Spec):
     def normalise_empty(self, meta):
@@ -51,6 +55,7 @@ class special_types_spec(sb.Spec):
 
         return val
 
+
 class no_more_than_one(Validator):
     def setup(self, choices):
         self.choices = choices
@@ -58,12 +63,14 @@ class no_more_than_one(Validator):
     def validate(self, meta, val):
         found = [key for key in self.choices if key in val]
         if len(found) > 1:
-            raise BadSpecValue("Can only specify at most one of the type overrides"
-                , avaialable=self.choices
-                , found=found
-                , meta=meta
-                )
+            raise BadSpecValue(
+                "Can only specify at most one of the type overrides",
+                avaialable=self.choices,
+                found=found,
+                meta=meta,
+            )
         return val
+
 
 class adjust_field_spec(sb.Spec):
     def normalise_filled(self, meta, val):
@@ -71,6 +78,7 @@ class adjust_field_spec(sb.Spec):
         choices = ["bits", "string_type", "override_type", "override_struct", "special_type"]
         no_more_than_one(choices).normalise(meta, val)
         return AdjustField.FieldSpec().normalise(meta, val)
+
 
 class must_be_true_spec(sb.Spec):
     def setup(self, name):
@@ -80,6 +88,7 @@ class must_be_true_spec(sb.Spec):
         if val != True:
             raise BadSpecValue(f"{self.name} can only be True or not present")
         return val
+
 
 class AdjustField(dictobj.Spec):
     rename = dictobj.NullableField(sb.string_spec)
@@ -93,9 +102,11 @@ class AdjustField(dictobj.Spec):
     override_struct = dictobj.NullableField(sb.string_spec)
     special_type = dictobj.NullableField(sb.string_spec)
 
+
 class MultiOptions(dictobj.Spec):
     name = dictobj.Field(sb.string_spec, wrapper=sb.required)
     cache_amount = dictobj.NullableField(sb.integer_spec)
+
 
 class struct_adjustment_spec(sb.Spec):
     def normalise_filled(self, meta, val):
@@ -103,6 +114,7 @@ class struct_adjustment_spec(sb.Spec):
         choices = ["fields", "using"]
         no_more_than_one(choices).normalise(meta, val)
         return StructAdjustment.FieldSpec().normalise(meta, val)
+
 
 class StructAdjustment(dictobj.Spec):
     rename = dictobj.NullableField(sb.string_spec)
@@ -113,9 +125,11 @@ class StructAdjustment(dictobj.Spec):
     namespace = dictobj.NullableField(sb.string_spec)
     multi = dictobj.NullableField(sb.string_spec)
 
+
 class CloneField(dictobj.Spec):
     more_extras = dictobj.Field(sb.listof(sb.string_spec()))
     remove_default = dictobj.Field(sb.boolean, default=False)
+
 
 class Clone(dictobj.Spec):
     cloning = dictobj.Field(sb.string_spec, wrapper=sb.required)
@@ -139,12 +153,15 @@ class Clone(dictobj.Spec):
 
         return clone
 
+
 class IgnoreOptions(dictobj.Spec):
     expanded = dictobj.NullableField(must_be_true_spec("expanded"))
+
 
 class PacketOutputOptions(dictobj.Spec):
     include = dictobj.Field(sb.listof(sb.string_spec()))
     exclude = dictobj.Field(sb.listof(sb.string_spec()))
+
 
 class output_spec(sb.Spec):
     def normalise_filled(self, meta, val):
@@ -153,12 +170,14 @@ class output_spec(sb.Spec):
             val.options = PacketOutputOptions.FieldSpec().normalise(meta.at("options"), val.options)
         return val
 
+
 class non_empty_list(sb.Spec):
     def normalise_filled(self, meta, val):
         val = sb.listof(sb.string_spec()).normalise(meta, val)
         if len(val) == 0:
             raise BadSpecValue("List must not be empty", meta=meta)
         return val
+
 
 class Output(dictobj.Spec):
     create = dictobj.Field(sb.string_choice_spec(["enums", "fields", "packets"]))
@@ -174,9 +193,12 @@ class Output(dictobj.Spec):
             os.makedirs(directory)
 
         with open(dest, "w") as fle:
+
             def write_line(s):
                 print(s, file=fle)
+
             yield write_line
+
 
 class Adjustments(dictobj.Spec):
     changes = dictobj.Field(sb.dictof(sb.string_spec(), struct_adjustment_spec()))

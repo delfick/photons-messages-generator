@@ -184,10 +184,7 @@ describe TestCase, "Using helper":
         """
 
         msg = "The two packets have different field names"
-        kwargs = {
-              "OneSetPacket": ["One", "Two", "Three"]
-            , "OneStatePacket": ["One", "Two", "Four"]
-            }
+        kwargs = {"OneSetPacket": ["One", "Two", "Three"], "OneStatePacket": ["One", "Two", "Four"]}
         with self.fuzzyAssertRaisesError(errors.BadUsingInstruction, msg, **kwargs):
             with self.generate(src, adjustments) as output:
                 pass
@@ -231,10 +228,7 @@ describe TestCase, "Using helper":
         """
 
         msg = "The two packets have different field names"
-        kwargs = {
-              "OneSetPacket": ["One", "Two", "Three"]
-            , "OneStatePacket": ["One", "Two"]
-            }
+        kwargs = {"OneSetPacket": ["One", "Two", "Three"], "OneStatePacket": ["One", "Two"]}
         with self.fuzzyAssertRaisesError(errors.BadUsingInstruction, msg, **kwargs):
             with self.generate(src, adjustments) as output:
                 pass
@@ -284,10 +278,7 @@ describe TestCase, "Using helper":
 
         field_on_set = "\n<<\n\tname: Three\n\ttype: uint8\n>>\n"
         field_on_state = "\n<<\n\tname: Three\n\ttype: uint32\n>>\n"
-        kwargs = {
-              "OneSetPacket": field_on_set
-            , "OneStatePacket": field_on_state
-            }
+        kwargs = {"OneSetPacket": field_on_set, "OneStatePacket": field_on_state}
         with self.fuzzyAssertRaisesError(errors.BadUsingInstruction, msg, **kwargs):
             with self.generate(src, adjustments) as output:
                 pass

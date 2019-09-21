@@ -105,7 +105,6 @@ describe TestCase, "Without adjustments":
                 FOUR = 6
             """
 
-
             expected_fields = """
             # fmt: off
 

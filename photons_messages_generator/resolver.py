@@ -11,6 +11,7 @@ import logging
 
 log = logging.getLogger("generator.resolver")
 
+
 class Resolver:
     def __init__(self, src, adjustments):
         self.src = src
@@ -54,20 +55,28 @@ class Resolver:
         names_one = [f.name for f in one.item_fields]
         names_two = [f.name for f in two.item_fields]
         if set(names_one) != set(names_two):
-            log.warning(lc("Two packets with same full names has different resolved names"
-                , **{one.name: names_one, two.name: names_two}
-                ))
+            log.warning(
+                lc(
+                    "Two packets with same full names has different resolved names",
+                    **{one.name: names_one, two.name: names_two},
+                )
+            )
             return True
 
         diff = False
         for f1, f2 in zip(one.item_fields, two.item_fields):
-            info = lambda f: f"\n<<\n\tname: {f.name}\n\ttype: {f.type}\n\tdefault: {f.default}\n\textras: {f.extras}\n>>\n"
+            info = (
+                lambda f: f"\n<<\n\tname: {f.name}\n\ttype: {f.type}\n\tdefault: {f.default}\n\textras: {f.extras}\n>>\n"
+            )
             f1_info = info(f1)
             f2_info = info(f2)
             if f1_info != f2_info:
-                log.warning(lc("Two packets with same field types has differences in fields\n"
-                    , **{one.name: f1_info, two.name: f2_info}
-                    ))
+                log.warning(
+                    lc(
+                        "Two packets with same field types has differences in fields\n",
+                        **{one.name: f1_info, two.name: f2_info},
+                    )
+                )
                 diff = True
 
         return diff
@@ -76,28 +85,31 @@ class Resolver:
         names_one = [f.full_name for f in one.item_fields]
         names_two = [f.full_name for f in two.item_fields]
         if set(names_one) != set(names_two):
-            raise errors.BadUsingInstruction("The two packets have different field names"
-                , **{one.name: names_one, two.name: names_two}
-                )
+            raise errors.BadUsingInstruction(
+                "The two packets have different field names",
+                **{one.name: names_one, two.name: names_two},
+            )
 
         for f1, f2 in zip(one.item_fields, two.item_fields):
             info = lambda f: f"\n<<\n\tname: {f.name}\n\ttype: {f.type}\n>>\n"
             f1_info = info(f1)
             f2_info = info(f2)
             if f1_info != f2_info:
-                raise errors.BadUsingInstruction("The two packets have different field types"
-                    , **{one.name: f1_info, two.name: f2_info}
-                    )
+                raise errors.BadUsingInstruction(
+                    "The two packets have different field types",
+                    **{one.name: f1_info, two.name: f2_info},
+                )
 
     def validate_bits(self):
         for parent_full_name, field in self.all_fields:
             bits = self.adjustments.field_attr(parent_full_name, field.full_name, "bits")
             if bits:
                 if len(bits) != field.size_bytes * 8:
-                    raise errors.InvalidBits(f"Need {field.size_bytes * 8} options but only have {len(bits)}"
-                        , packet = parent_full_name
-                        , field = field.full_name
-                        )
+                    raise errors.InvalidBits(
+                        f"Need {field.size_bytes * 8} options but only have {len(bits)}",
+                        packet=parent_full_name,
+                        field=field.full_name,
+                    )
 
     def register_clones(self):
         names = [s.full_name for s in self.src.groups]
@@ -120,12 +132,13 @@ class Resolver:
             if using:
                 using = self.find_packet(using)
                 if using.pkt_type > parent.pkt_type:
-                    raise errors.BadUsingInstruction("The pkt_type of the used message must be less than the packet"
-                        , packet = parent.full_name
-                        , using = parent.full_name
-                        , packet_pkt_type = parent.pkt_type
-                        , using_pkt_type = using.pkt_type
-                        )
+                    raise errors.BadUsingInstruction(
+                        "The pkt_type of the used message must be less than the packet",
+                        packet=parent.full_name,
+                        using=parent.full_name,
+                        packet_pkt_type=parent.pkt_type,
+                        using_pkt_type=using.pkt_type,
+                    )
                 self.ensure_using_instruction_is_correct(parent, using)
                 self.adjustments.change_using(parent.full_name, using)
 
@@ -144,27 +157,34 @@ class Resolver:
     def resolve_field_extras(self):
         for parent_full_name, field in self.all_fields:
             field.default = self.adjustments.field_attr(
-                  parent_full_name, field.full_name, "default"
-                )
+                parent_full_name, field.full_name, "default"
+            )
 
             field.extras = self.adjustments.field_attr(
-                  parent_full_name, field.full_name, "extras", []
-                )
+                parent_full_name, field.full_name, "extras", []
+            )
 
     def resolve_types(self):
         for parent_full_name, field in self.all_fields:
             if field.full_name and field.full_name.startswith("Reserved"):
-                field.name = self.adjustments.field_attr(parent_full_name, field.full_name, "rename")
+                field.name = self.adjustments.field_attr(
+                    parent_full_name, field.full_name, "rename"
+                )
                 field.full_name = None
                 field.type = "reserved"
 
-            field_type = self.adjustments.field_type(
-                  parent_full_name, field.full_name
-                ) or field.type
+            field_type = (
+                self.adjustments.field_type(parent_full_name, field.full_name) or field.type
+            )
 
-            field.type = self.resolve_type(field.full_name, parent_full_name, field_type
-                , original = self.resolve_type(field.full_name, parent_full_name, field.type, original=None)
-                )
+            field.type = self.resolve_type(
+                field.full_name,
+                parent_full_name,
+                field_type,
+                original=self.resolve_type(
+                    field.full_name, parent_full_name, field.type, original=None
+                ),
+            )
 
     def resolve_packet_fields(self):
         for parent, _ in self.all_parents:
@@ -174,12 +194,9 @@ class Resolver:
                 if bits:
                     for name in bits:
                         meta = Meta({}, []).at(parent.full_name).at(field.full_name).at(name)
-                        f = struct_field_spec().normalise(meta
-                            , { "name": name
-                              , "type": "bit"
-                              , "size_bytes": 0
-                              }
-                            )
+                        f = struct_field_spec().normalise(
+                            meta, {"name": name, "type": "bit", "size_bytes": 0}
+                        )
                         f.type = ft.SimpleType("bit", 1)
                         fields.append(f)
                     continue
@@ -211,13 +228,16 @@ class Resolver:
         for packet in self.src.packets:
             namespace_camel = snake_to_camel(packet.namespace)
             if not packet.full_name.startswith(namespace_camel):
-                log.warning(lc("Packet with weird name, expected it to start with the namesapce"
-                    , expected_prefix = namespace_camel
-                    , packet_name = packet.full_name
-                    ))
+                log.warning(
+                    lc(
+                        "Packet with weird name, expected it to start with the namesapce",
+                        expected_prefix=namespace_camel,
+                        packet_name=packet.full_name,
+                    )
+                )
                 continue
 
-            short = packet.full_name[len(namespace_camel):]
+            short = packet.full_name[len(namespace_camel) :]
 
             if short.startswith("Get"):
                 name = f"Get{short[3:]}"
@@ -246,9 +266,13 @@ class Resolver:
                 else:
                     prefix = f"{camel_to_snake(enum.full_name).upper()}_"
                     if value.name.startswith(prefix):
-                        value.name = value.name[len(prefix):]
+                        value.name = value.name[len(prefix) :]
                     else:
-                        raise errors.UnexpectedEnumName("Expected enum name to have the enum name as a prefix", got=value.name, enum=enum.name)
+                        raise errors.UnexpectedEnumName(
+                            "Expected enum name to have the enum name as a prefix",
+                            got=value.name,
+                            enum=enum.name,
+                        )
 
         for parent, is_packet in self.all_parents:
             reserved_num = self.adjustments.reserved_start(parent.full_name)
@@ -265,18 +289,20 @@ class Resolver:
 
             invalid = self.adjustments.invalid_field_names
             if name and name in invalid:
-                raise errors.InvalidName("Fields cannot be one of the invalid field names"
-                    , field = name
-                    , parent = parent_full_name
-                    , invalid_names = invalid
-                    )
+                raise errors.InvalidName(
+                    "Fields cannot be one of the invalid field names",
+                    field=name,
+                    parent=parent_full_name,
+                    invalid_names=invalid,
+                )
 
             if name and name in keyword.kwlist:
-                raise errors.InvalidName("Field names cannot be reserved python keywords"
-                    , field = name
-                    , parent = parent_full_name
-                    , invalid_names = keyword.kwlist
-                    )
+                raise errors.InvalidName(
+                    "Field names cannot be reserved python keywords",
+                    field=name,
+                    parent=parent_full_name,
+                    invalid_names=keyword.kwlist,
+                )
 
     @property
     def all_fields(self):
@@ -306,25 +332,28 @@ class Resolver:
 
     def ensure_is_same_type(self, typ, original, full_name):
         if not isinstance(original, ft.SimpleType):
-            raise errors.GeneratorError("Cannot override non simple type with a special type"
-                , overriding = original
-                , name = full_name
-                )
+            raise errors.GeneratorError(
+                "Cannot override non simple type with a special type",
+                overriding=original,
+                name=full_name,
+            )
 
         if original.val != typ.options.type:
-            raise errors.NotSameType("Tried to set type to something that is wrong"
-                , want = typ
-                , should_be = original
-                , name = full_name
-                )
+            raise errors.NotSameType(
+                "Tried to set type to something that is wrong",
+                want=typ,
+                should_be=original,
+                name=full_name,
+            )
 
         if original.multiples != typ.options.multiples:
-            raise errors.NotSameType("Expect the same number of multiples for special type as original"
-                , want = typ.options.multiples
-                , need = original.multiples
-                , special_type = typ.options.name
-                , name = full_name
-                )
+            raise errors.NotSameType(
+                "Expect the same number of multiples for special type as original",
+                want=typ.options.multiples,
+                need=original.multiples,
+                special_type=typ.options.name,
+                name=full_name,
+            )
 
     def resolve_type(self, field, parent, typ, original):
         if isinstance(typ, ft.OverrideType):
@@ -332,18 +361,17 @@ class Resolver:
 
         elif isinstance(typ, ft.StructOverrideType):
             if not self.is_clone(typ.struct, original):
-                raise errors.NotAClone("Can only override structs with clones of them"
-                    , wanted=typ
-                    , need_clone_of=original
-                    , name=parent
-                    )
+                raise errors.NotAClone(
+                    "Can only override structs with clones of them",
+                    wanted=typ,
+                    need_clone_of=original,
+                    name=parent,
+                )
             return ft.StructType(self.get_struct(typ.struct), original.multiples)
 
         elif isinstance(typ, ft.StringType):
             if not isinstance(original, ft.SimpleType) or original.val != "byte":
-                raise errors.CantBeString("Only bytes can be turned into string"
-                    , name=parent
-                    )
+                raise errors.CantBeString("Only bytes can be turned into string", name=parent)
             return typ
 
         elif isinstance(typ, ft.SpecialType):
@@ -354,9 +382,9 @@ class Resolver:
             raise Exception("Expected a string", got=typ, type=type(typ))
 
         multiples = 1
-        if typ.startswith('['):
-            multiples = int(typ[1:typ.find("]")])
-            typ = typ[typ.find("]") + 1:]
+        if typ.startswith("["):
+            multiples = int(typ[1 : typ.find("]")])
+            typ = typ[typ.find("]") + 1 :]
 
         if typ.startswith("<") and typ.endswith(">"):
             return self.find_type(field, parent, typ[1:-1], multiples)
@@ -370,7 +398,9 @@ class Resolver:
 
         for enum in self.src.enums:
             if enum.full_name == typ:
-                allow_unknown_enums = self.adjustments.field_attr(parent, field, "allow_unknown_enums", False)
+                allow_unknown_enums = self.adjustments.field_attr(
+                    parent, field, "allow_unknown_enums", False
+                )
                 return ft.EnumType(enum, multiples, allow_unknown=allow_unknown_enums)
 
         for struct in self.src.groups:
@@ -390,7 +420,9 @@ class Resolver:
 
         clone = self.get_clone(typ)
         if clone.cloning != original.struct.name:
-            raise errors.GeneratorError("Overriding a type with a clone of a different type", want=typ, overriding=original)
+            raise errors.GeneratorError(
+                "Overriding a type with a clone of a different type", want=typ, overriding=original
+            )
 
         return True
 

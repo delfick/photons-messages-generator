@@ -599,7 +599,7 @@ describe TestCase, "Types":
                 pass
 
     it "can understand defaults for enums":
-        src ="""
+        src = """
             enums:
               SomeEnum:
                 type: uint8
@@ -682,7 +682,7 @@ describe TestCase, "Types":
             output.assertFileContents("messages.py", expected_messages)
 
     it "complains if default is not an enum value":
-        src ="""
+        src = """
             enums:
               SomeEnum:
                 type: uint8
@@ -711,18 +711,14 @@ describe TestCase, "Types":
                 default: "WAT"
         """
 
-        kwargs = {
-              "available": ["ONE", "TWO"]
-            , "enum": "SomeEnum"
-            , "wanted": "WAT"
-            }
+        kwargs = {"available": ["ONE", "TWO"], "enum": "SomeEnum", "wanted": "WAT"}
 
         with self.fuzzyAssertRaisesError(errors.NoSuchEnumValue, **kwargs):
             with self.generate(src, adjustments) as output:
                 pass
 
     it "can understand unknown values for enums":
-        src ="""
+        src = """
             enums:
               SomeEnum:
                 type: uint8

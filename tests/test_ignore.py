@@ -327,6 +327,6 @@ describe TestCase, "ignoring structs":
             expanded: true
         """
 
-        with self.fuzzyAssertRaisesError(errors.NoSuchType, wanted='SomeParams'):
+        with self.fuzzyAssertRaisesError(errors.NoSuchType, wanted="SomeParams"):
             with self.generate(src, adjustments) as output:
                 pass

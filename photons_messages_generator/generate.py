@@ -13,6 +13,7 @@ import os
 
 log = logging.getLogger("generator.generate")
 
+
 def write_enums(options, src, adjustments, output_folder):
     with options.file(output_folder) as write_line:
         if options.static:
@@ -26,6 +27,7 @@ def write_enums(options, src, adjustments, output_folder):
 
             if i != len(src.enums) - 1:
                 write_line("")
+
 
 def write_fields(options, src, adjustments, output_folder):
     with options.file(output_folder) as write_line:
@@ -70,7 +72,9 @@ def write_fields(options, src, adjustments, output_folder):
                 write_line(f"class {struct.multi_name}(dictobj.PacketSpec):")
                 write_line(f"    fields = {struct.name}")
                 if struct.multi_options.cache_amount is not None:
-                    write_line(f"{struct.multi_name}.Meta.cache = LRU({struct.multi_options.cache_amount})")
+                    write_line(
+                        f"{struct.multi_name}.Meta.cache = LRU({struct.multi_options.cache_amount})"
+                    )
 
                 if num != len(want) - 1:
                     write_line("")
@@ -78,6 +82,7 @@ def write_fields(options, src, adjustments, output_folder):
         if options.static or adjustments.types or want:
             write_line("")
             write_line("# fmt: on")
+
 
 def write_messages_class(write_line, namespace, packets, src, adjustments):
     write_line("#" * 24)
@@ -121,6 +126,7 @@ def write_messages_class(write_line, namespace, packets, src, adjustments):
 
     return klsname
 
+
 def write_packets(options_list, src, adjustments, output_folder):
     by_namespace = defaultdict(list)
     for packet in src.packets:
@@ -131,9 +137,11 @@ def write_packets(options_list, src, adjustments, output_folder):
         for namespace in by_namespace:
             if any(fnmatch.fnmatch(namespace, m) for m in opts.include):
                 matched.append(namespace)
-        matched = [namespace for namespace in matched
-              if not any(fnmatch.fnmatch(namespace, m) for m in opts.exclude)
-            ]
+        matched = [
+            namespace
+            for namespace in matched
+            if not any(fnmatch.fnmatch(namespace, m) for m in opts.exclude)
+        ]
 
         ordered = [ns for ns in adjustments.namespace_order if ns in matched]
         ordered += [ns for ns in matched if ns not in ordered]
@@ -151,7 +159,9 @@ def write_packets(options_list, src, adjustments, output_folder):
     for t, namespaces in by_output.items():
         dupd = [ns for ns in namespaces if ns in found]
         if dupd:
-            raise errors.InvalidOutput("namespaces have been declared multiple times", duplicated=dupd)
+            raise errors.InvalidOutput(
+                "namespaces have been declared multiple times", duplicated=dupd
+            )
         found.extend(namespaces)
 
     for options in options_list:
@@ -173,6 +183,7 @@ def write_packets(options_list, src, adjustments, output_folder):
             write_line("")
 
             write_line(f"__all__ = {json.dumps(klses)}")
+
 
 def generate(src, adjustments, output_folder):
     if "fields" in src:

@@ -151,7 +151,12 @@ describe TestCase, "Multiple":
               name: Params
         """
 
-        kwargs = {"multiple": 3, "size_bytes": 49, "packet_name": "PacketExample", "field_name": "things"}
+        kwargs = {
+            "multiple": 3,
+            "size_bytes": 49,
+            "packet_name": "PacketExample",
+            "field_name": "things",
+        }
         msg = "Expected size bytes to be divisible by multiple"
         with self.fuzzyAssertRaisesError(errors.BadSizeBytes, msg, **kwargs):
             with self.generate(src, adjustments) as output:
@@ -190,7 +195,12 @@ describe TestCase, "Multiple":
               name: Params
         """
 
-        kwargs = {"multiple": 3, "size_bytes": 13, "struct_name": "some_params", "field_name": "two"}
+        kwargs = {
+            "multiple": 3,
+            "size_bytes": 13,
+            "struct_name": "some_params",
+            "field_name": "two",
+        }
         msg = "Expected size bytes to be divisible by multiple"
         with self.fuzzyAssertRaisesError(errors.BadSizeBytes, msg, **kwargs):
             with self.generate(src, adjustments) as output:
