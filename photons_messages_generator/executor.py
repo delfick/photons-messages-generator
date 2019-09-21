@@ -1,7 +1,7 @@
 from photons_messages_generator.generate import generate
 
-from delfick_logging import setup_logging
-from delfick_error import DelfickError
+from delfick_project.logging import setup_logging
+from delfick_project.errors import DelfickError
 from ruamel.yaml import YAML
 import argparse
 import sys

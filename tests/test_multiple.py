@@ -4,7 +4,7 @@ from photons_messages_generator import test_helpers as thp
 from photons_messages_generator import field_types as ft
 from photons_messages_generator import errors
 
-from delfick_error_pytest import assertRaises
+from delfick_project.errors_pytest import assertRaises
 
 describe "Multiple":
     it "allows multiple of things":

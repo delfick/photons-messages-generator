@@ -3,11 +3,7 @@ from photons_messages_generator.src import struct_field_spec
 from photons_messages_generator import field_types as ft
 from photons_messages_generator import errors
 
-from input_algorithms.validators import Validator
-from input_algorithms.errors import BadSpecValue
-from input_algorithms.dictobj import dictobj
-from input_algorithms import spec_base as sb
-from input_algorithms.meta import Meta
+from delfick_project.norms import Validator, BadSpecValue, dictobj, sb, Meta
 from contextlib import contextmanager
 import os
 

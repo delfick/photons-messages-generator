@@ -1,4 +1,4 @@
-from delfick_error import DelfickError
+from delfick_project.errors import DelfickError
 
 
 class GeneratorError(DelfickError):

@@ -2,9 +2,7 @@ from photons_messages_generator.helpers import valid_enum_types
 from photons_messages_generator import field_types as ft
 from photons_messages_generator import errors
 
-from input_algorithms.errors import BadSpecValue
-from input_algorithms.dictobj import dictobj
-from input_algorithms import spec_base as sb
+from delfick_project.norms import dictobj, sb, BadSpecValue
 
 
 class EnumValue(dictobj.Spec):

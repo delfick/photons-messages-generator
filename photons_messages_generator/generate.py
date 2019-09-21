@@ -4,7 +4,7 @@ from photons_messages_generator.resolver import Resolver
 from photons_messages_generator.src import Src
 from photons_messages_generator import errors
 
-from input_algorithms.meta import Meta
+from delfick_project.norms import Meta
 from collections import defaultdict
 import fnmatch
 import logging

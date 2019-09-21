@@ -3,9 +3,9 @@ from photons_messages_generator.src import CloneStruct, struct_field_spec
 from photons_messages_generator import field_types as ft
 from photons_messages_generator import errors
 
-from input_algorithms.meta import Meta
+from delfick_project.norms import Meta
+from delfick_project.logging import lc
 from collections import defaultdict
-from delfick_logging import lc
 import keyword
 import logging
 
