@@ -58,12 +58,13 @@ def convert_type(name, size_bits):
         elif name == "byte":
             return f"T.Bytes({num_bytes} * 8)"
 
+    if name == "reserved":
+        return f"T.Reserved({size_bits})"
+
     if name == "bit" or size_bits == 1:
         return "T.Bool"
     elif name == "bool":
         return "T.BoolInt"
-    elif name == "reserved":
-        return f"T.Reserved({size_bits})"
     elif name == "float32":
         return "T.Float"
     elif name == "float64":

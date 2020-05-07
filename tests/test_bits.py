@@ -75,7 +75,9 @@ describe "Multiple":
                       type: "bool"
                       size_bits: 1
                     - type: "reserved"
-                      size_bits: 7
+                      size_bits: 1
+                    - type: "reserved"
+                      size_bits: 6
         """
 
         adjustments = """
@@ -94,7 +96,8 @@ describe "Multiple":
                 PacketExample = msg(1
                     , ("a_bool", T.BoolInt)
                     , ("a_real_bool", T.Bool)
-                    , ("reserved4", T.Reserved(7))
+                    , ("reserved4", T.Reserved(1))
+                    , ("reserved5", T.Reserved(6))
                     )
 
             # fmt: on
