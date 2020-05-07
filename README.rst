@@ -10,6 +10,9 @@ https://github.com/delfick/photons-core
 Changelog
 ---------
 
+0.6.3 - 7 May 2020
+    * Fixed 1 bit reserved fields
+
 0.6.2 - 7 May 2020
     * Can now understand size_bits: 1 in the source yaml as meaning T.Bool
 
