@@ -104,7 +104,7 @@ describe "Types":
         types:
           duration_type:
             type: uint32
-            size_bytes: 4
+            size_bits: 32
             default: "0"
             extras:
               - |
@@ -211,7 +211,7 @@ describe "Types":
         types:
           duration_type:
             type: uint32
-            size_bytes: 4
+            size_bits: 32
             default: "0"
             extras:
               - |

@@ -18,7 +18,7 @@ setup(
 
     , extras_require =
       { "tests":
-        [ "noseOfYeti==1.8.3"
+        [ "noseOfYeti==2.0.0"
         , "pytest==5.1.2"
         ]
       }

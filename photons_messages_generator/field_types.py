@@ -10,30 +10,31 @@ class SimpleType:
     def __repr__(self):
         return f"<Simple: {self.multiples}: {self.val}>"
 
-    def format(self, size_bytes, **kwargs):
+    def format(self, size_bits, **kwargs):
         multiples = ""
         if self.multiples > 1:
             multiples = f".multiple({self.multiples})"
-        if size_bytes % self.multiples != 0:
+
+        if size_bits % self.multiples != 0:
             raise errors.BadSizeBytes(
                 "Expected size bytes to be divisible by multiple",
                 multiple=self.multiples,
-                size_bytes=size_bytes,
+                size_bits=size_bits,
             )
 
         if self.val == "byte":
             multiples = ""
         else:
-            size_bytes = int(size_bytes / self.multiples)
-        return f"{convert_type(self.val, size_bytes)}{multiples}"
+            size_bits = int(size_bits / self.multiples)
+        return f"{convert_type(self.val, size_bits)}{multiples}"
 
 
 class StringType:
     def __repr__(self):
         return "<String>"
 
-    def format(self, size_bytes, **kwargs):
-        return f"{convert_type('string', size_bytes)}"
+    def format(self, size_bits, **kwargs):
+        return f"{convert_type('string', size_bits)}"
 
 
 class EnumType:
@@ -51,14 +52,14 @@ class EnumType:
     def __repr__(self):
         return f"<Enum: {self.enum.type}: {self.enum.name}>"
 
-    def format(self, size_bytes, **kwargs):
+    def format(self, size_bits, **kwargs):
         options = ""
         multiple = ""
         if self.allow_unknown:
             options = ", allow_unknown=True"
         if self.multiples > 1:
             multiple = f".multiple({self.multiples})"
-        return f"{convert_type(self.enum.type, size_bytes)}.enum(enums.{self.enum.name}{options}){multiple}"
+        return f"{convert_type(self.enum.type, size_bits)}.enum(enums.{self.enum.name}{options}){multiple}"
 
 
 class StructOverrideType:
@@ -68,7 +69,7 @@ class StructOverrideType:
     def __repr__(self):
         return f"<StructOverride: {self.struct}>"
 
-    def format(self, size_bytes, **kwargs):
+    def format(self, size_bits, **kwargs):
         raise errors.GeneratorError("Struct overrides should be resolved before format")
 
 
@@ -79,13 +80,13 @@ class SpecialType:
     def __repr__(self):
         return f"<SpecialType: {self.options.name}: {self.options.type}>"
 
-    def format(self, size_bytes, in_fields=False, **kwargs):
-        if size_bytes != self.options.size_bytes:
+    def format(self, size_bits, in_fields=False, **kwargs):
+        if size_bits != self.options.size_bits:
             raise errors.GeneratorError(
-                "Special type has different size_bytes than expected",
+                "Special type has different size_bits than expected",
                 name=self.options.name,
-                want=size_bytes,
-                specified=self.options.size_bytes,
+                want=size_bits,
+                specified=self.options.size_bits,
             )
 
         prefix = "fields." if not in_fields else ""
@@ -102,19 +103,19 @@ class StructType:
     def __repr__(self):
         return f"<Struct: {self.multiples}: {self.struct.name}>"
 
-    def format(self, size_bytes, in_fields=False, **kwargs):
-        if size_bytes % self.multiples != 0:
+    def format(self, size_bits, in_fields=False, **kwargs):
+        if size_bits % self.multiples != 0:
             raise errors.BadSizeBytes(
                 "Expected size bytes to be divisible by multiple",
                 multiple=self.multiples,
-                size_bytes=size_bytes,
+                size_bits=size_bits,
             )
-        size_bytes = int(size_bytes / self.multiples)
+        size_bits = int(size_bits / self.multiples)
 
         if self.ignored:
-            return f"T.Bytes({size_bytes * 8} * {self.multiples})"
+            return f"T.Bytes({size_bits} * {self.multiples})"
 
-        typ = f"T.Bytes({size_bytes * 8})"
+        typ = f"T.Bytes({size_bits})"
         prefix = "" if in_fields else "fields."
         if self.struct.multi_name.startswith("lambda"):
             prefix = ""
@@ -153,7 +154,7 @@ class PacketType:
     def __repr__(self):
         return f"<Packet: {self.packet.name}>"
 
-    def format(self, size_bytes, **kwargs):
+    def format(self, size_bits, **kwargs):
         raise errors.GeneratorError(
             "Packet types are meant to be already resolved before formats are called",
             packet=self.packet,
@@ -187,5 +188,5 @@ class OverrideType:
     def __repr__(self):
         return f"<Override {self.override}>"
 
-    def format(self, size_bytes, **kwargs):
+    def format(self, size_bits, **kwargs):
         return self.override

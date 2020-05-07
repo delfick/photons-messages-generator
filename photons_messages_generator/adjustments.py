@@ -17,7 +17,7 @@ class override_type_spec(sb.Spec):
 class SpecialType(dictobj.Spec):
     name = dictobj.Field(sb.string_spec, wrapper=sb.required)
     type = dictobj.Field(sb.string_choice_spec(valid_struct_types), wrapper=sb.required)
-    size_bytes = dictobj.Field(sb.integer_spec, wrapper=sb.required)
+    size_bits = dictobj.Field(sb.integer_spec, wrapper=sb.required)
     multiples = dictobj.Field(sb.integer_spec, default=1)
     default = dictobj.NullableField(sb.string_spec)
     extras = dictobj.Field(sb.listof(sb.string_spec()))
@@ -30,7 +30,7 @@ class SpecialType(dictobj.Spec):
                 name=self.name,
                 full_name=self.name,
                 type=self.type,
-                size_bytes=self.size_bytes,
+                size_bits=self.size_bits,
                 default=self.default,
                 extras=self.extras,
             ),

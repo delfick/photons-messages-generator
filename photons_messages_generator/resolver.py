@@ -104,9 +104,9 @@ class Resolver:
         for parent_full_name, field in self.all_fields:
             bits = self.adjustments.field_attr(parent_full_name, field.full_name, "bits")
             if bits:
-                if len(bits) != field.size_bytes * 8:
+                if len(bits) != field.size_bits:
                     raise errors.InvalidBits(
-                        f"Need {field.size_bytes * 8} options but only have {len(bits)}",
+                        f"Need {field.size_bits} options but only have {len(bits)}",
                         packet=parent_full_name,
                         field=field.full_name,
                     )
@@ -195,7 +195,7 @@ class Resolver:
                     for name in bits:
                         meta = Meta({}, []).at(parent.full_name).at(field.full_name).at(name)
                         f = struct_field_spec().normalise(
-                            meta, {"name": name, "type": "bit", "size_bytes": 0}
+                            meta, {"name": name, "type": "bit", "size_bits": 0}
                         )
                         f.type = ft.SimpleType("bit", 1)
                         fields.append(f)

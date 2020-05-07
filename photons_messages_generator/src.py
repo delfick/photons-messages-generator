@@ -33,7 +33,18 @@ class struct_field_spec(sb.Spec):
         if "type" in val:
             val["original_type"] = val["type"]
 
-        return StructField.FieldSpec().normalise(meta, val)
+        sf = StructField.FieldSpec().normalise(meta, val)
+
+        size_bits_defined = sf.size_bits is not sb.NotSpecified
+        size_bytes_defined = sf.size_bytes is not sb.NotSpecified
+
+        if not (size_bits_defined ^ size_bytes_defined):
+            raise BadSpecValue("Expected one of size_bits or size_bytes", meta=meta)
+
+        if size_bytes_defined:
+            sf.size_bits = sf.size_bytes * 8
+
+        return sf
 
 
 class StructField(dictobj.Spec):
@@ -41,7 +52,8 @@ class StructField(dictobj.Spec):
     full_name = dictobj.NullableField(sb.string_spec)
     type = dictobj.Field(sb.string_spec, wrapper=sb.required)
     original_type = dictobj.Field(sb.string_spec, wrapper=sb.required)
-    size_bytes = dictobj.Field(sb.integer_spec, wrapper=sb.required)
+    size_bits = dictobj.Field(sb.integer_spec, wrapper=sb.optional_spec)
+    size_bytes = dictobj.Field(sb.integer_spec, wrapper=sb.optional_spec)
     default = dictobj.NullableField(sb.string_spec)
     extras = dictobj.Field(sb.listof(sb.string_spec()))
 
@@ -55,7 +67,7 @@ class StructField(dictobj.Spec):
                 prefix = "" if in_fields else "fields."
                 return f"*{prefix}{self.type.struct.name}"
 
-        type_info = f"{self.type.format(self.size_bytes, in_fields=in_fields)}{extras}"
+        type_info = f"{self.type.format(self.size_bits, in_fields=in_fields)}{extras}"
         if type_only:
             return type_info
 

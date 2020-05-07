@@ -154,7 +154,7 @@ describe "Multiple":
 
         kwargs = {
             "multiple": 3,
-            "size_bytes": 49,
+            "size_bits": 392,
             "packet_name": "PacketExample",
             "field_name": "things",
         }
@@ -198,7 +198,7 @@ describe "Multiple":
 
         kwargs = {
             "multiple": 3,
-            "size_bytes": 13,
+            "size_bits": 104,
             "struct_name": "some_params",
             "field_name": "two",
         }
