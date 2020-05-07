@@ -1,7 +1,6 @@
 # coding: spec
 
 from photons_messages_generator import test_helpers as thp
-from photons_messages_generator import field_types as ft
 from photons_messages_generator import errors
 
 from delfick_project.errors_pytest import assertRaises
@@ -34,7 +33,7 @@ describe "Types":
 
         msg = "Struct some_params is used in a .multiple block but has no multi_name specified"
         with assertRaises(errors.ExpectedMultiName, msg):
-            with thp.generate(src, adjustments) as output:
+            with thp.generate(src, adjustments):
                 pass
 
     it "complains about cycle packets":
@@ -64,7 +63,7 @@ describe "Types":
 
         kwargs = {"chain": ["OneOtherPacket", "OnePacketExample"]}
         with assertRaises(errors.CyclicPacketField, **kwargs):
-            with thp.generate(src, adjustments) as output:
+            with thp.generate(src, adjustments):
                 pass
 
     it "can replace a field":
@@ -192,7 +191,7 @@ describe "Types":
 
         kwargs = {"available": [], "wanted": "duration_type"}
         with assertRaises(errors.UnknownSpecialType, **kwargs):
-            with thp.generate(src, adjustments) as output:
+            with thp.generate(src, adjustments):
                 pass
 
     it "complains if replacing a field with different type":
@@ -231,7 +230,7 @@ describe "Types":
 
         msg = "Tried to set type to something that is wrong"
         try:
-            with thp.generate(src, adjustments) as output:
+            with thp.generate(src, adjustments):
                 pass
             assert False, "Expected an exception"
         except errors.NotSameType as error:
@@ -263,7 +262,7 @@ describe "Types":
 
         msg = "Only bytes can be turned into string"
         with assertRaises(errors.CantBeString, msg, name="SomeParams"):
-            with thp.generate(src, adjustments) as output:
+            with thp.generate(src, adjustments):
                 pass
 
     it "can replace bytes with a string":
@@ -597,7 +596,7 @@ describe "Types":
 
         msg = "Need 32 options but only have 8"
         with assertRaises(errors.InvalidBits, msg, field="One", packet="SomeParams"):
-            with thp.generate(src, adjustments) as output:
+            with thp.generate(src, adjustments):
                 pass
 
     it "can understand defaults for enums":
@@ -716,7 +715,7 @@ describe "Types":
         kwargs = {"available": ["ONE", "TWO"], "enum": "SomeEnum", "wanted": "WAT"}
 
         with assertRaises(errors.NoSuchEnumValue, **kwargs):
-            with thp.generate(src, adjustments) as output:
+            with thp.generate(src, adjustments):
                 pass
 
     it "can understand unknown values for enums":

@@ -188,7 +188,7 @@ describe "Using helper":
         msg = "The two packets have different field names"
         kwargs = {"OneSetPacket": ["One", "Two", "Three"], "OneStatePacket": ["One", "Two", "Four"]}
         with assertRaises(errors.BadUsingInstruction, msg, **kwargs):
-            with thp.generate(src, adjustments) as output:
+            with thp.generate(src, adjustments):
                 pass
 
     it "complains if different number of fields":
@@ -232,7 +232,7 @@ describe "Using helper":
         msg = "The two packets have different field names"
         kwargs = {"OneSetPacket": ["One", "Two", "Three"], "OneStatePacket": ["One", "Two"]}
         with assertRaises(errors.BadUsingInstruction, msg, **kwargs):
-            with thp.generate(src, adjustments) as output:
+            with thp.generate(src, adjustments):
                 pass
 
     it "complains if fields are different types":

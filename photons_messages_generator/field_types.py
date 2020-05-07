@@ -30,7 +30,7 @@ class SimpleType:
 
 class StringType:
     def __repr__(self):
-        return f"<String>"
+        return "<String>"
 
     def format(self, size_bytes, **kwargs):
         return f"{convert_type('string', size_bytes)}"

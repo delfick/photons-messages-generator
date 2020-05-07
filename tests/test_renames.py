@@ -375,7 +375,7 @@ describe "renames":
         msg = "Fields cannot be one of the invalid field names"
         kwargs = {"field": "payload", "parent": "SomeParams", "invalid_names": ["payload"]}
         with assertRaises(errors.InvalidName, msg, **kwargs):
-            with thp.generate(src, adjustments) as output:
+            with thp.generate(src, adjustments):
                 pass
 
     it "cannot rename struct field to reserved keywords":
@@ -402,7 +402,7 @@ describe "renames":
         msg = "Field names cannot be reserved python keywords"
         kwargs = {"field": "finally", "parent": "SomeParams", "invalid_names": keyword.kwlist}
         with assertRaises(errors.InvalidName, msg, **kwargs):
-            with thp.generate(src, adjustments) as output:
+            with thp.generate(src, adjustments):
                 pass
 
     it "can rename packets":

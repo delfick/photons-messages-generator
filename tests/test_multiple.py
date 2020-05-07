@@ -1,7 +1,6 @@
 # coding: spec
 
 from photons_messages_generator import test_helpers as thp
-from photons_messages_generator import field_types as ft
 from photons_messages_generator import errors
 
 from delfick_project.errors_pytest import assertRaises
@@ -161,7 +160,7 @@ describe "Multiple":
         }
         msg = "Expected size bytes to be divisible by multiple"
         with assertRaises(errors.BadSizeBytes, msg, **kwargs):
-            with thp.generate(src, adjustments) as output:
+            with thp.generate(src, adjustments):
                 pass
 
     it "complains if size bytes and multiples don't line up in a struct field":
@@ -205,5 +204,5 @@ describe "Multiple":
         }
         msg = "Expected size bytes to be divisible by multiple"
         with assertRaises(errors.BadSizeBytes, msg, **kwargs):
-            with thp.generate(src, adjustments) as output:
+            with thp.generate(src, adjustments):
                 pass
