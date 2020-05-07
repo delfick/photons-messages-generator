@@ -10,6 +10,9 @@ https://github.com/delfick/photons-core
 Changelog
 ---------
 
+0.6.2 - 7 May 2020
+    * Can now understand size_bits: 1 in the source yaml as meaning T.Bool
+
 0.6.1 - 21 September 2019
     * Formatted code with black and converted tests to pytest
     * Upgraded to `delfick_project <https://delfick-project.readthedocs.io/en/latest/>`_
@@ -191,7 +194,7 @@ this:
     types:
       duration_type:
         type: uint32
-        size_bytes: 4
+        size_bits: 32
         default: "0"
         extras:
           - |
