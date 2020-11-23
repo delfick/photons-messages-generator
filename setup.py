@@ -13,13 +13,13 @@ setup(
     , install_requires =
       [ "delfick_project==0.5.1"
       , "rainbow_logging_handler==2.2.2"
-      , "ruamel.yaml==0.15.87"
+      , "ruamel.yaml==0.16.12"
       ]
 
     , extras_require =
       { "tests":
-        [ "noseOfYeti==2.0.0"
-        , "pytest==5.1.2"
+        [ "noseOfYeti==2.0.2"
+        , "pytest==6.1.2"
         ]
       }
 

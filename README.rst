@@ -10,6 +10,9 @@ https://github.com/delfick/photons-core
 Changelog
 ---------
 
+0.6.4 - 23 November 2020
+    * Compatibility with python3.9
+
 0.6.3 - 7 May 2020
     * Fixed 1 bit reserved fields
 
