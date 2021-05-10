@@ -12,7 +12,7 @@ Changelog
 
 .. _release-0-6-5:
 
-0.6.5 - TBD
+0.6.5 - 10 May 2021
     * Update dependencies
 
 .. _release-0-6-4:
