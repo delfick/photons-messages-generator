@@ -10,6 +10,9 @@ https://github.com/delfick/photons-core
 Changelog
 ---------
 
+0.6.5 - TBD
+    * Update dependencies
+
 0.6.4 - 23 November 2020
     * Compatibility with python3.9
 

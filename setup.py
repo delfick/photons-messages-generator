@@ -11,9 +11,9 @@ setup(
     , include_package_data = True
 
     , install_requires =
-      [ "delfick_project==0.5.1"
+      [ "delfick_project==0.7.9"
       , "rainbow_logging_handler==2.2.2"
-      , "ruamel.yaml==0.16.12"
+      , "ruamel.yaml==0.17.4"
       ]
 
     , extras_require =
