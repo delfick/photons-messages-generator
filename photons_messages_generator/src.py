@@ -154,6 +154,13 @@ class Struct(dictobj.Spec):
             )
         return self.multi_options.name
 
+    @property
+    def dynamic_function_name(self):
+        return f"union_fields_{self.name}"
+
+    def __hash__(self):
+        return hash(self.full_name)
+
 
 class packet_spec(sb.Spec):
     def normalise_filled(self, meta, val):
@@ -216,7 +223,28 @@ class packets_spec(sb.Spec):
         return final
 
 
+class unions_spec(sb.Spec):
+    def normalise_empty(self, meta):
+        return []
+
+    def normalise_filled(self, meta, val):
+        val = sb.dictionary_spec().normalise(meta, val)
+
+        final = []
+        for name, v in val.items():
+            if type(v) is dict:
+                if "fields" in v:
+                    v["item_fields"] = v["fields"]
+                v = dict(v)
+                v["full_name"] = name
+                v["name"] = name
+            final.append(struct_spec().normalise(meta.at(name), v))
+
+        return final
+
+
 class Src(dictobj.Spec):
     enums = dictobj.Field(named_spec(Enum.FieldSpec()))
+    unions = dictobj.Field(unions_spec())
     groups = dictobj.Field(named_spec(struct_spec()))
     packets = dictobj.Field(packets_spec())

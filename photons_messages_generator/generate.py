@@ -1,5 +1,5 @@
+from photons_messages_generator.helpers import snake_to_camel, camel_to_snake
 from photons_messages_generator.adjustments import Adjustments
-from photons_messages_generator.helpers import snake_to_camel
 from photons_messages_generator.resolver import Resolver
 from photons_messages_generator.src import Src
 from photons_messages_generator import errors
@@ -42,6 +42,24 @@ def write_fields(options, src, adjustments, output_folder):
 
         if options.static or adjustments.types or want:
             write_line("# fmt: off")
+            write_line("")
+
+        for union in set(adjustments._used_unions):
+            write_line("")
+            write_line(f"def {union.dynamic_function_name}(typ):")
+            for i, field in enumerate(union.item_fields):
+                indent = "    "
+                write_line(
+                    f"{indent}if typ is enums.{union.union_enum}.{camel_to_snake(field.full_name).upper()}:"
+                )
+                indent *= 2
+                try:
+                    write_line(f"{indent}yield from ({field.format(in_fields=True)}, )")
+                except errors.BadSizeBytes as error:
+                    error.kwargs["struct_name"] = struct.name
+                    error.kwargs["field_name"] = field.name
+                    raise
+            write_line("")
             write_line("")
 
         for opts in adjustments.types.values():

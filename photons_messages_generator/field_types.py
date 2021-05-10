@@ -181,6 +181,23 @@ class PacketType:
                 yield field.with_prefix(prefix)
 
 
+class UnionType:
+    def __init__(self, union, multiples, *, switch_field):
+        self.union = union
+        self.switch_field = switch_field
+        self.expanded = True
+        if multiples != 1:
+            raise errors.NonsensicalMultiplier(
+                "If you want multiples of a struct, make it not a union type", wanted=multiples
+            )
+
+    def __repr__(self):
+        return f"<Union: {self.union.name}>"
+
+    def format(self, size_bits, **kwargs):
+        return f"T.Bytes({size_bits//8} * 8).dynamic(lambda pkt: fields.{self.union.dynamic_function_name}(pkt.{self.switch_field}))"
+
+
 class OverrideType:
     def __init__(self, override):
         self.override = override

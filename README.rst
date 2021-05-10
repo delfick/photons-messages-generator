@@ -10,6 +10,11 @@ https://github.com/delfick/photons-core
 Changelog
 ---------
 
+.. _release-0-6-6:
+
+0.6.6 - TBD
+    * Support Union types
+
 .. _release-0-6-5:
 
 0.6.5 - 10 May 2021

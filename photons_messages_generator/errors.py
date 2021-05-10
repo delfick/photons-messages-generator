@@ -87,3 +87,7 @@ class CantBeString(GeneratorError):
 
 class BadSizeBytes(GeneratorError):
     pass
+
+
+class MissingUnionOptions(GeneratorError):
+    desc = "Union fields need some extra options"

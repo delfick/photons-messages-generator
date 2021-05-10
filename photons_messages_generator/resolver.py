@@ -22,7 +22,7 @@ class Resolver:
             struct.multi_options = self.adjustments.multi_options(struct.full_name)
 
         by_fields = defaultdict(list)
-        for packet in self.src.packets:
+        for packet in self.all_packets:
             if packet.item_fields:
                 fields = tuple((field.full_name, field.type) for field in packet.item_fields)
                 by_fields[fields].append(packet)
@@ -37,6 +37,7 @@ class Resolver:
         self.resolve_types()
         self.resolve_renames()
         self.resolve_packet_fields()
+        self.resolve_field_unions()
         self.generate_clones()
 
         self.fix_field_names()
@@ -142,6 +143,13 @@ class Resolver:
                 self.ensure_using_instruction_is_correct(parent, using)
                 self.adjustments.change_using(parent.full_name, using)
 
+    @property
+    def all_packets(self):
+        for packet in self.src.packets:
+            yield packet
+        for union in self.src.unions:
+            yield union
+
     def rename_namespaces(self):
         for packet in self.src.packets:
             rename = self.adjustments.rename_namespaces.get(packet.namespace)
@@ -163,6 +171,26 @@ class Resolver:
             field.extras = self.adjustments.field_attr(
                 parent_full_name, field.full_name, "extras", []
             )
+
+    def resolve_field_unions(self):
+        for parent_full_name, field in self.all_fields:
+            field.union_enum = self.adjustments.field_attr(
+                parent_full_name, field.full_name, "union_enum"
+            )
+            field.union_switch_field = self.adjustments.field_attr(
+                parent_full_name, field.full_name, "union_switch_field"
+            )
+
+            if field.union_enum is not None:
+                found = False
+                for enum in self.src.enums:
+                    if enum.name == field.union_enum:
+                        found = True
+                        break
+                if not found:
+                    raise errors.NoSuchEnum(
+                        wanted=field.union_enum, available=sorted(e.name for e in self.src.enums)
+                    )
 
     def resolve_types(self):
         for parent_full_name, field in self.all_fields:
@@ -201,7 +229,9 @@ class Resolver:
                         fields.append(f)
                     continue
 
-                if getattr(field.type, "expanded", False):
+                if isinstance(field.type, ft.UnionType):
+                    fields.append(field)
+                elif getattr(field.type, "expanded", False):
                     expand_structs = isinstance(field.type, ft.PacketType)
                     fields.extend(field.expand_fields(expand_structs=expand_structs))
                 else:
@@ -311,7 +341,7 @@ class Resolver:
                 for field in struct.item_fields:
                     yield struct.full_name, field
 
-        for packet in self.src.packets:
+        for packet in self.all_packets:
             for field in packet.item_fields:
                 yield packet.full_name, field
 
@@ -321,11 +351,11 @@ class Resolver:
             if not isinstance(struct, CloneStruct):
                 yield struct, False
 
-        for packet in self.src.packets:
+        for packet in self.all_packets:
             yield packet, True
 
     def find_packet(self, name):
-        for packet in self.src.packets:
+        for packet in self.all_packets:
             if packet.full_name == name:
                 return packet
         raise errors.UnknownPacket(wanted=name)
@@ -411,6 +441,24 @@ class Resolver:
         for packet in self.src.packets:
             if packet.full_name == typ:
                 return ft.PacketType(packet, multiples)
+
+        for union in self.src.unions:
+            if union.full_name == typ:
+                union_switch_field = self.adjustments.field_attr(
+                    parent, field, "union_switch_field"
+                )
+                union_enum = self.adjustments.field_attr(parent, field, "union_enum")
+                if union_switch_field is None or union_enum is None:
+                    raise errors.MissingUnionOptions(
+                        parent=parent,
+                        field=field,
+                        have={"union_switch_field": union_switch_field, "union_enum": union_enum},
+                        need=["union_switch_field", "union_enum"],
+                    )
+
+                union.union_enum = union_enum
+                self.adjustments.used_union(union)
+                return ft.UnionType(union, multiples, switch_field=union_switch_field,)
 
         raise errors.NoSuchType(wanted=typ)
 
