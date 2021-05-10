@@ -12,7 +12,7 @@ Changelog
 
 .. _release-0-6-6:
 
-0.6.6 - TBD
+0.6.6 - 11 May 2021
     * Support Union types
 
 .. _release-0-6-5:
