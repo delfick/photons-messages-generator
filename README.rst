@@ -10,37 +10,59 @@ https://github.com/delfick/photons-core
 Changelog
 ---------
 
+.. _release-0-6-5:
+
 0.6.5 - TBD
     * Update dependencies
+
+.. _release-0-6-4:
 
 0.6.4 - 23 November 2020
     * Compatibility with python3.9
 
+.. _release-0-6-3:
+
 0.6.3 - 7 May 2020
     * Fixed 1 bit reserved fields
 
+.. _release-0-6-2:
+
 0.6.2 - 7 May 2020
     * Can now understand size_bits: 1 in the source yaml as meaning T.Bool
+
+.. _release-0-6-1:
 
 0.6.1 - 21 September 2019
     * Formatted code with black and converted tests to pytest
     * Upgraded to `delfick_project <https://delfick-project.readthedocs.io/en/latest/>`_
 
+.. _release-0-6-0:
+
 0.6.0 - 21 September 2019
     * I changed the many option in photons, it is now "multiple" instead
 
+.. _release-0-5-4:
+
 0.5.4 - 1 September 2019
     * Emit fmt: off and fmt: on stanzas so black doesn't destroy the code
+
+.. _release-0-5-3:
 
 0.5.3 - 28 June 2019
     * Emit fields as lists instead of tuples to ensure it's a list when there's
       only one item in it.
 
+.. _release-0-5-2:
+
 0.5.2 - 23 Jan 2019
     * Started using ruamel.yaml instead of PyYaml to load configuration
 
+.. _release-0-5-1:
+
 0.5.1 - 12 Jan 2019
     * Make it possible to say an enum value allows unknown values
+
+.. _release-0-5:
 
 0.5 - 3 Jan 2019
     Initial release
