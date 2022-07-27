@@ -10,6 +10,11 @@ https://github.com/delfick/photons-core
 Changelog
 ---------
 
+.. _release-0-6-7:
+
+0.6.7 - 27 July 2022
+    * Updated the yaml library I use
+
 .. _release-0-6-6:
 
 0.6.6 - 11 May 2021
