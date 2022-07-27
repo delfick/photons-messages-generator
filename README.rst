@@ -10,6 +10,11 @@ https://github.com/delfick/photons-core
 Changelog
 ---------
 
+.. _release-0-6-8:
+
+0.6.8 - 27 July 2022
+    * Allow reserved fields in a union enum
+
 .. _release-0-6-7:
 
 0.6.7 - 27 July 2022
