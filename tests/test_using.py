@@ -282,5 +282,5 @@ describe "Using helper":
         field_on_state = "\n<<\n\tname: Three\n\ttype: uint32\n>>\n"
         kwargs = {"OneSetPacket": field_on_set, "OneStatePacket": field_on_state}
         with assertRaises(errors.BadUsingInstruction, msg, **kwargs):
-            with thp.generate(src, adjustments) as output:
+            with thp.generate(src, adjustments):
                 pass

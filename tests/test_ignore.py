@@ -330,5 +330,5 @@ describe "ignoring structs":
         """
 
         with assertRaises(errors.NoSuchType, wanted="SomeParams"):
-            with thp.generate(src, adjustments) as output:
+            with thp.generate(src, adjustments):
                 pass

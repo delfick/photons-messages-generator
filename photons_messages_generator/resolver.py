@@ -458,7 +458,11 @@ class Resolver:
 
                 union.union_enum = union_enum
                 self.adjustments.used_union(union)
-                return ft.UnionType(union, multiples, switch_field=union_switch_field,)
+                return ft.UnionType(
+                    union,
+                    multiples,
+                    switch_field=union_switch_field,
+                )
 
         raise errors.NoSuchType(wanted=typ)
 

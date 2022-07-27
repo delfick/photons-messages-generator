@@ -705,10 +705,10 @@ describe "renames":
         msg = "Fields cannot be one of the invalid field names"
         kwargs = {"field": "fields", "parent": "OnePacket", "invalid_names": ["payload", "fields"]}
         with assertRaises(errors.InvalidName, msg, **kwargs):
-            with thp.generate(src, adjustments) as output:
+            with thp.generate(src, adjustments):
                 pass
 
-    it "cannot rename packet field to invalid name":
+    it "cannot rename packet field to invalid name2":
         src = """
             packets:
               one:
@@ -734,7 +734,7 @@ describe "renames":
         msg = "Field names cannot be reserved python keywords"
         kwargs = {"field": "finally", "parent": "OnePacket", "invalid_names": keyword.kwlist}
         with assertRaises(errors.InvalidName, msg, **kwargs):
-            with thp.generate(src, adjustments) as output:
+            with thp.generate(src, adjustments):
                 pass
 
     it "can put a packet into a different namespace":
