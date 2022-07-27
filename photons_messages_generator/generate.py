@@ -50,7 +50,7 @@ def write_fields(options, src, adjustments, output_folder):
             for i, field in enumerate(union.item_fields):
                 indent = "    "
                 write_line(
-                    f"{indent}if typ is enums.{union.union_enum}.{camel_to_snake(field.full_name).upper()}:"
+                    f"{indent}if typ is enums.{union.union_enum}.{camel_to_snake(field.full_name or field.name).upper()}:"
                 )
                 indent *= 2
                 try:

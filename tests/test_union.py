@@ -16,8 +16,10 @@ describe "Unions":
                     value: 2
                   - name: CHOICE_THREE
                     value: 3
-                  - name: CHOICE_FOUR
+                  - name: reserved
                     value: 4
+                  - name: CHOICE_FIVE
+                    value: 5
 
             fields:
               SomeParams:
@@ -50,7 +52,9 @@ describe "Unions":
                   - name: "Three"
                     type: "[4]<OtherParams>"
                     size_bytes: 16
-                  - name: "Four"
+                  - type: reserved
+                    size_bytes: 16
+                  - name: "Five"
                     type: "[16]byte"
                     size_bytes: 16
 
@@ -95,7 +99,7 @@ describe "Unions":
             fields:
               One:
                 default: "20"
-              Four:
+              Five:
                 extras: "default(b'')"
         """
 
@@ -105,7 +109,8 @@ describe "Unions":
                 ONE = 1
                 TWO = 2
                 THREE = 3
-                FOUR = 4
+                RESERVED1 = 4
+                FIVE = 5
             """
 
             expected_fields = """
@@ -119,8 +124,10 @@ describe "Unions":
                     yield from (*some_params, )
                 if typ is enums.Choice.THREE:
                     yield from (("three", T.Bytes(32).multiple(4, kls=Other)), )
-                if typ is enums.Choice.FOUR:
-                    yield from (("four", T.Bytes(16 * 8).default(b'')), )
+                if typ is enums.Choice.RESERVED4:
+                    yield from (("reserved4", T.Reserved(128)), )
+                if typ is enums.Choice.FIVE:
+                    yield from (("five", T.Bytes(16 * 8).default(b'')), )
             
             
             some_params = [
